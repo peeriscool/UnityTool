@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class UiManager : MonoBehaviour
     void Start()
     {
 	    print("Started UI manager");
+        print("commandhandler = " + CommandHandler.instance);
     }
 
     // Update is called once per frame
@@ -19,18 +21,26 @@ public class UiManager : MonoBehaviour
     
 	public void ButtonPress(string command)
 	{
-		print("StartButtonPress"+ command);
-		//fix this by making commandhandler singleton
-		//find commandhandler for move
-		CommandHandler CHref = GameObject.FindObjectOfType<MoveableBehaviour>().commandHandler;
-		//Do requested Command
-		if(command == "UndoMove")
+		//print("ActiveCommand = "+ command);
+        //fix Make a dictonary so whe have a list of avalible commands 
+        
+        //Do requested Command
+        if (command == "Redo")
+        {
+           print(CommandHandler.instance.RedoCommand());
+            //if (CommandHandler.instance.RedoCommand() != true) {print("Redo"); };
+        }
+        if (command == "Undo")
 		{
-			if(CHref.UndoComand()!= true){print("EmptyUndo");};
-		}
+            print(CommandHandler.instance.UndoComand());
+            //	if(CommandHandler.instance.UndoComand()!= true){print("Undo");};
+        }
 	}
 	
-	public void test()
-	{}
+	public void OnSliderValueChanged (float Value)
+	{
+        print(Value);
+        CommandHandler.instance.IcommandHandler(new IMove(GameObject.Find("Player").transform, Vector3.left, Value));
+    }
 	
 }

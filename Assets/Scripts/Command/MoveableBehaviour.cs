@@ -5,16 +5,13 @@ using UnityEngine;
 public class MoveableBehaviour : MonoBehaviour
 {
 	IMove move;
-	[SerializeField]
-	public CommandHandler commandHandler = new CommandHandler();
-	
     void Start()
     {
 	    move = new IMove(this.transform,Vector3.up,0.01f);
-	    
-	    try 
+
+        try 
 	    {
-	    	commandHandler.AddCommand(move);
+	    	CommandHandler.instance.AddCommand(move);
 	    }
 	    		
 	    catch (System.Exception e)

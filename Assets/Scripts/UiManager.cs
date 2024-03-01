@@ -35,6 +35,10 @@ public class UiManager : MonoBehaviour
             print(CommandHandler.instance.UndoComand());
             //	if(CommandHandler.instance.UndoComand()!= true){print("Undo");};
         }
+        if (command == "SavePrefab")
+        {
+            SavePrefab.Instance.SaveFunction(GameObject.Find("Player"));
+        }
 	}
 	
 	public void OnSliderValueChanged (float Value)

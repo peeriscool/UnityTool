@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 //https://www.youtube.com/watch?v=6xs0Saff940
-public class NewBehaviourScript : MonoBehaviour
+public class PlaneGenerator : MonoBehaviour
 {
 	// MeshData
 	private Mesh Gmesh;
@@ -45,7 +45,7 @@ public class NewBehaviourScript : MonoBehaviour
 		Gmesh.SetVertices(points);
 		Gmesh.SetNormals(normals);
 		Gmesh.SetUVs(0,Quad_uvs());
-		Gmesh.uv = UV;
+		//Gmesh.uv = UV;
 		Gmesh.triangles = Triangles;
 		//Gmesh.name = "Gmesh_";
 		Gmesh.RecalculateNormals();
@@ -70,11 +70,11 @@ public class NewBehaviourScript : MonoBehaviour
 			new Vector3(-1,-1),
 			new Vector3(1,-1)
 		};
-		for (int i = 0; i < points.Count; i++)
-		{
-			points[i] = Vector3.Scale(points[i], new Vector3(slidervalue, slidervalue, slidervalue));
-		}
-		return points;
+        for (int i = 0; i < points.Count; i++)
+        {
+            points[i] = Vector3.Scale(points[i], new Vector3(slidervalue, slidervalue, slidervalue));
+        }
+        return points;
 	}
 
 	private int[]triIndices = new int[] //quad TriIndices
@@ -86,10 +86,10 @@ public class NewBehaviourScript : MonoBehaviour
     {
 		List<Vector2> uvs = new List<Vector2>
 		{
-			new Vector2(0,1),
 			new Vector2(1,1),
-			new Vector2(0,0),
-			new Vector2(1,0)
+			new Vector2(0,1),
+			new Vector2(1,0),
+			new Vector2(0,0)
 		};
 		
 		return uvs;

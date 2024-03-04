@@ -21,8 +21,6 @@ using Parabox.CSG;
         composite.AddComponent<MeshFilter>().sharedMesh = result.mesh;
         composite.AddComponent<MeshRenderer>().sharedMaterials = result.materials.ToArray();
 
-
-        composite
     }
 }
 

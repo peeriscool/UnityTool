@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using AnotherFileBrowser.Windows;
 
 public class UiManager : MonoBehaviour
 {
@@ -37,11 +38,30 @@ public class UiManager : MonoBehaviour
         }
         if (command == "SavePrefab")
         {
-            SavePrefab.Instance.SaveFunction(GameObject.Find("Player"));
+            //  SavePrefab.Instance.SaveFunction(GameObject.Find("Player"));
+            string path = openProjectFile();
+            SavePrefab.Instance.ObjExportUtil(path);
         }
 	}
-	
-	public void OnSliderValueChanged (float Value)
+    string openProjectFile()
+    {
+        string sendpath = "";
+        var bp = new BrowserProperties();
+        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+        bp.filterIndex = 0;
+
+        new FileBrowser().OpenFileBrowser(bp, path =>
+        {
+            //Load Binary or Json format of project
+            Debug.Log(path);
+            Debug.Log("Load Binary or Json format of project");
+            sendpath = path;
+           
+        });
+        return sendpath;
+    }
+
+    public void OnSliderValueChanged (float Value)
 	{
         print(Value);
         CommandHandler.instance.IcommandHandler(new IMove(GameObject.Find("Player").transform, Vector3.left, Value));

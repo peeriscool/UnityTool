@@ -7,8 +7,8 @@ public class Program : MonoBehaviour
 	// Start is called before the first frame update
     void Start()
     {
-	    SceneManager.LoadScene("UI_Scene",LoadSceneMode.Additive);
-	    print("Loaded UI Scene");
+	   // SceneManager.LoadScene("UI_Scene",LoadSceneMode.Additive);
+	    print("Load UI");
     }
 
 

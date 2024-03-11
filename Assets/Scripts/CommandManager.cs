@@ -5,12 +5,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using AnotherFileBrowser.Windows;
 
-public class UiManager : MonoBehaviour
+public class CommandManager : MonoBehaviour
 {
     // Start is called before the first frame update
+    Dictionary<string, Commands> ComDict;
     void Start()
     {
-	    print("Started UI manager");
+        ComDict = new Dictionary<string, Commands>();
+        print("Started UI manager");
         print("commandhandler = " + CommandHandler.instance);
     }
 
@@ -19,12 +21,29 @@ public class UiManager : MonoBehaviour
     {
         
     }
-    
+    public enum Commands
+    {
+        Message, Redo, Undo, Saveprefab
+    }
+    public void CommandSwitch(Commands key)
+    {
+        Commands index = key;
+        switch (index)
+        {
+            case Commands.Message:
+                { break; }
+            case Commands.Redo:
+                { break; }
+            case Commands.Undo:
+                { break; }
+            case Commands.Saveprefab:
+                { break; }
+            default:break;
+        }
+    }
 	public void ButtonPress(string command)
 	{
 		//print("ActiveCommand = "+ command);
-        //fix Make a dictonary so whe have a list of avalible commands 
-        
         //Do requested Command
         if (command == "Redo")
         {
@@ -66,5 +85,5 @@ public class UiManager : MonoBehaviour
         print(Value);
         CommandHandler.instance.IcommandHandler(new IMove(GameObject.Find("Player").transform, Vector3.left, Value));
     }
-	
+  
 }

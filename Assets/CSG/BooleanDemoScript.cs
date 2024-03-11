@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Parabox.CSG;
 
-    public class MonoDemoScript : MonoBehaviour
+    public class BooleanDemoScript : MonoBehaviour
     {
     //   CSG.BooleanOp intersect = CSG.BooleanOp.Intersection;
     private void Start()
@@ -15,7 +15,8 @@ using Parabox.CSG;
 
         // Perform boolean operation
         Model result = CSG.Subtract(cube, sphere);
-
+        Model Union = CSG.Union(cube, sphere);
+        Model Intersect = CSG.Intersect(cube, sphere);
         // Create a gameObject to render the result
         var composite = new GameObject();
         composite.AddComponent<MeshFilter>().sharedMesh = result.mesh;

@@ -24,7 +24,7 @@ public class SavePrefab : MonoBehaviour
 	/// Creates a Prefab in the editor
 	/// </summary>
 	/// <param name="obj">Object to save as prefab</param>
-	public void SaveFunction(GameObject obj) //Unity editor dependicy
+	public void Save(GameObject obj) //Unity editor dependicy
 	{
 #if UNITY_EDITOR
 

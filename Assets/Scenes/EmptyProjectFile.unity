@@ -425,7 +425,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1589373515}
   - component: {fileID: 1589373516}
-  - component: {fileID: 1589373517}
   - component: {fileID: 1589373518}
   - component: {fileID: 1589373519}
   - component: {fileID: 1589373520}
@@ -463,21 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 498f190b01769084db318d2db1827539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1589373517
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1589373514}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d57478c9b801b349b8b20981d6845c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slidervalue: 1
-  updateToggle: 0
-  newMat: {fileID: 2100000, guid: 29c338a6ea14f2c45a37bfea91bc339d, type: 2}
 --- !u!33 &1589373518
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -537,9 +521,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589373514}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6e59c3af4c378164498301d1fd7c9960, type: 3}
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
   m_Name: 
   m_EditorClassIdentifier: 
-  RadiusIn: 1.73
-  Thickness: 1.77
-  Segments: 25
+  m_PanelSettings: {fileID: 11400000, guid: 96e0af3b093b510438ad199213d8916a, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: aea031884bd610440a305b080e8f2c51, type: 3}
+  m_SortingOrder: 0

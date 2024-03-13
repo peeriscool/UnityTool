@@ -1,0 +1,7 @@
+:root 
+{
+	--highlight.mid: # 463475;
+	--highlight.high: # 097938;
+	--grey.1: #232323;
+	--grey.2: #343434;
+}	

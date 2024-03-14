@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-//using AnotherFileBrowser.Windows;
+using AnotherFileBrowser.Windows;
 
 public class CommandManager : MonoBehaviour
 {
@@ -57,7 +57,7 @@ public class CommandManager : MonoBehaviour
         }
         if (command == "SavePrefab")
         {
-            //  SavePrefab.Instance.SaveFunction(GameObject.Find("Player"));
+             SavePrefab.Instance.Save(GameObject.Find("Player"));
             string path = openProjectFile();
             SavePrefab.Instance.ObjExportUtil(path);
         }
@@ -65,18 +65,19 @@ public class CommandManager : MonoBehaviour
     string openProjectFile()
     {
         string sendpath = "";
-	    //  var bp = new BrowserProperties();
-	    //  bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
-	    //  bp.filterIndex = 0;
+        var bp = new BrowserProperties();
+        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+        bp.filterIndex = 0;
 
-	    //  new FileBrowser().OpenFileBrowser(bp, path =>
-     //   {
-            //Load Binary or Json format of project
-	        //     Debug.Log(path);
-	        //      Debug.Log("Load Binary or Json format of project");
-	        //      sendpath = path;
-           
-	        //   });
+        new FileBrowser().OpenFileBrowser(bp, path =>
+        {
+       //   Load Binary or Json format of project
+
+               Debug.Log(path);
+          Debug.Log("Load Binary or Json format of project");
+          sendpath = path;
+
+        });
         return sendpath;
     }
 

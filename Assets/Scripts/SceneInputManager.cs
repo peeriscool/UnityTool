@@ -4,24 +4,65 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-class SceneInputManager : MonoBehaviour
+class SceneInputManager
 {
     Actions Playeractions;
     enum Modifier { none, Ctrl, alt, shift }
     Modifier active;
-    void Awake()
+    bool selected = false;
+    public void EnableControls()
     {
         active = Modifier.none;
         Playeractions = new Actions();
         Playeractions.InputMapping.Letters.Enable();
         Playeractions.InputMapping.Menucontrolls.Enable();
+        Playeractions.InputMapping.Mouse.Enable();
+        Playeractions.InputMapping.Mouse.started+= Mouse_context;
+        Playeractions.InputMapping.Mouse.performed += Mouse_context;
+        Playeractions.InputMapping.Mouse.canceled += Mouse_context;
         Playeractions.InputMapping.Letters.performed += Letters_performed;
         Playeractions.InputMapping.Menucontrolls.started += Menucontrolls_started;
         Playeractions.InputMapping.Menucontrolls.canceled += Menucontrolls_canceled;
-
+        Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
     }
 
-    private void Menucontrolls_canceled(InputAction.CallbackContext obj)
+    private void Mouse_context(InputAction.CallbackContext context)
+    {
+        if (context.started) //fires once
+        {
+            Debug.Log("Started");
+            if (context.action.activeControl == Mouse.current.leftButton)
+            {
+                    SelectionManager.instance.selection = SelectionManager.state.pickup;
+            }
+        }
+     
+       if(context.performed) //pressing down
+        {
+            if (context.action.activeControl == Mouse.current.leftButton) 
+            {
+                SelectionManager.instance.selection = SelectionManager.state.hold;                
+            }
+       }
+
+        if (context.canceled) //released
+        {
+            if (context.action.activeControl == Mouse.current.leftButton) 
+            {
+                SelectionManager.instance.selection = SelectionManager.state.release;
+            }
+        }
+    }
+
+    private void Menucontrolls_performed(InputAction.CallbackContext context)
+    {
+        if (context.action.activeControl == Keyboard.current.escapeKey)
+        {
+            UIInputManager.toggleUi();
+        }
+    }
+
+    private void Menucontrolls_canceled(InputAction.CallbackContext context)
     {
     //    Debug.Log("null");
         active = 0;
@@ -78,6 +119,7 @@ class SceneInputManager : MonoBehaviour
         if (context.action.activeControl == Keyboard.current.vKey && active == Modifier.Ctrl)
         {
             Debug.Log(context.action.activeControl.name);
+           
         }
 
     }

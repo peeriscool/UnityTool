@@ -7,10 +7,23 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class Program : MonoBehaviour
 {
+    public bool test;
+    UIInputManager UImanager;
+    SceneInputManager InputManager = new SceneInputManager();
     private void Awake()
     {
+        UImanager = new UIInputManager(GetComponent<UIDocument>());
+        InputManager.EnableControls();
         print("Load UI");
-        LoadUI();
+      
+        //  LoadUI();
+    }
+    private void Update()
+    {
+        if(test)
+        {
+        
+        }
     }
     //init UI 
     void LoadUI()

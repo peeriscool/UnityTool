@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using AnotherFileBrowser.Windows;
+//using AnotherFileBrowser.Windows;
 
 public class CommandManager : MonoBehaviour
 {
@@ -65,18 +65,18 @@ public class CommandManager : MonoBehaviour
     string openProjectFile()
     {
         string sendpath = "";
-        var bp = new BrowserProperties();
-        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
-        bp.filterIndex = 0;
+	    //  var bp = new BrowserProperties();
+	    //  bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+	    //  bp.filterIndex = 0;
 
-        new FileBrowser().OpenFileBrowser(bp, path =>
-        {
+	    //  new FileBrowser().OpenFileBrowser(bp, path =>
+     //   {
             //Load Binary or Json format of project
-            Debug.Log(path);
-            Debug.Log("Load Binary or Json format of project");
-            sendpath = path;
+	        //     Debug.Log(path);
+	        //      Debug.Log("Load Binary or Json format of project");
+	        //      sendpath = path;
            
-        });
+	        //   });
         return sendpath;
     }
 

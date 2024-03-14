@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
-using AnotherFileBrowser.Windows;
+//using AnotherFileBrowser.Windows;
 
 public class UIInputManager : MonoBehaviour
 {
@@ -19,16 +19,16 @@ public class UIInputManager : MonoBehaviour
     }
     void openProjectFile()
     {
-        var bp = new BrowserProperties();
-        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
-        bp.filterIndex = 0;
+	    //       var bp = new BrowserProperties();
+	    //      bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+	    //      bp.filterIndex = 0;
 
-        new FileBrowser().OpenFileBrowser(bp, path =>
-        {
-            //Load Binary or Json format of project
-            Debug.Log(path);
-            Debug.Log("Load Binary or Json format of project");
-        });
+	    //     new FileBrowser().OpenFileBrowser(bp, path =>
+	    //      {
+	        //          //Load Binary or Json format of project
+	    //          Debug.Log(path);
+	    //          Debug.Log("Load Binary or Json format of project");
+	    //      });
     }
      void Startproject()
     {

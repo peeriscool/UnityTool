@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using UnityEngine;
 using System.Runtime.Serialization;
 
-//https://www.youtube.com/watch?v=5roZtuqZyuw binary
 //https://medium.com/@defuncart/json-serialization-in-unity-9420abbce30b Json
 
 public class JSONSerializer

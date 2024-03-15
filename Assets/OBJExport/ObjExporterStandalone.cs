@@ -1,9 +1,10 @@
-﻿#if UNITY_EDITOR
 using UnityEngine;
 using System.Collections;
-using UnityEditor;
+//using UnityEditor;
 using System.Text;
 using System.Collections.Generic;
+public class ObjExporterStandalone : MonoBehaviour
+{
 
 /*=============================================================================
  |	    Project:  Unity3D Scene OBJ Exporter
@@ -18,8 +19,7 @@ using System.Collections.Generic;
  |
  *===========================================================================*/
 
-public class OBJExporter : ScriptableWizard
-{
+
     public bool onlySelectedObjects = false;
     public bool applyPosition = true;
     public bool applyRotation = true;
@@ -37,40 +37,40 @@ public class OBJExporter : ScriptableWizard
 
     bool StaticBatchingEnabled()
     {
-        PlayerSettings[] playerSettings = Resources.FindObjectsOfTypeAll<PlayerSettings>();
-        if (playerSettings == null)
-        {
-            return false;
-        }
-        SerializedObject playerSettingsSerializedObject = new SerializedObject(playerSettings);
-        SerializedProperty batchingSettings = playerSettingsSerializedObject.FindProperty("m_BuildTargetBatching");
-        for (int i = 0; i < batchingSettings.arraySize; i++)
-        {
-            SerializedProperty batchingArrayValue = batchingSettings.GetArrayElementAtIndex(i);
-            if (batchingArrayValue == null)
-            {
-                continue;
-            }
-            IEnumerator batchingEnumerator = batchingArrayValue.GetEnumerator();
-            if (batchingEnumerator == null)
-            {
-                continue;
-            }
-            while (batchingEnumerator.MoveNext())
-            {
-                SerializedProperty property = (SerializedProperty)batchingEnumerator.Current;
-                if (property != null && property.name == "m_StaticBatching")
-                {
-                    return property.boolValue;
-                }
-            }
-        }
+        //PlayerSettings[] playerSettings = Resources.FindObjectsOfTypeAll<PlayerSettings>();
+        //if (playerSettings == null)
+        //{
+        //    return false;
+        //}
+        //SerializedObject playerSettingsSerializedObject = new SerializedObject(playerSettings);
+        //SerializedProperty batchingSettings = playerSettingsSerializedObject.FindProperty("m_BuildTargetBatching");
+        //for (int i = 0; i < batchingSettings.arraySize; i++)
+        //{
+        //    SerializedProperty batchingArrayValue = batchingSettings.GetArrayElementAtIndex(i);
+        //    if (batchingArrayValue == null)
+        //    {
+        //        continue;
+        //    }
+        //    IEnumerator batchingEnumerator = batchingArrayValue.GetEnumerator();
+        //    if (batchingEnumerator == null)
+        //    {
+        //        continue;
+        //    }
+        //    while (batchingEnumerator.MoveNext())
+        //    {
+        //        SerializedProperty property = (SerializedProperty)batchingEnumerator.Current;
+        //        if (property != null && property.name == "m_StaticBatching")
+        //        {
+        //            return property.boolValue;
+        //        }
+        //    }
+        //}
         return false;
     }
 
     void OnWizardUpdate()
     {
-        helpString = "Aaro4130's OBJ Exporter " + versionString;
+     //   helpString = "Aaro4130's OBJ Exporter " + versionString;
     }
 
     Vector3 RotateAroundPoint(Vector3 point, Vector3 pivot, Quaternion angle)
@@ -84,47 +84,47 @@ public class OBJExporter : ScriptableWizard
 
     void OnWizardCreate()
     {
-        if(StaticBatchingEnabled() && Application.isPlaying)
-        {
-            EditorUtility.DisplayDialog("Error", "Static batching is enabled. This will cause the export file to look like a mess, as well as be a large filesize. Disable this option, and restart the player, before continuing.", "OK");
-            goto end;
-        }
-        if (autoMarkTexReadable)
-        {
-            int yes = EditorUtility.DisplayDialogComplex("Warning", "This will convert all textures to Advanced type with the read/write option set. This is not reversible and will permanently affect your project. Continue?", "Yes", "No", "Cancel");
-            if(yes > 0)
-            {
-                goto end;
-            }
-        }
-        string lastPath = EditorPrefs.GetString("a4_OBJExport_lastPath", "");
-        string lastFileName = EditorPrefs.GetString("a4_OBJExport_lastFile", "unityexport.obj");
-        string expFile = EditorUtility.SaveFilePanel("Export OBJ", lastPath, lastFileName, "obj");
-        if (expFile.Length > 0)
-        {
-            var fi = new System.IO.FileInfo(expFile);
-            EditorPrefs.SetString("a4_OBJExport_lastFile", fi.Name);
-            EditorPrefs.SetString("a4_OBJExport_lastPath", fi.Directory.FullName);
-            Export(expFile);
-        }
-        end:;
+    //    if (StaticBatchingEnabled() && Application.isPlaying)
+    //    {
+    //        EditorUtility.DisplayDialog("Error", "Static batching is enabled. This will cause the export file to look like a mess, as well as be a large filesize. Disable this option, and restart the player, before continuing.", "OK");
+    //        goto end;
+    //    }
+        //if (autoMarkTexReadable)
+        //{
+        //    int yes = EditorUtility.DisplayDialogComplex("Warning", "This will convert all textures to Advanced type with the read/write option set. This is not reversible and will permanently affect your project. Continue?", "Yes", "No", "Cancel");
+        //    if (yes > 0)
+        //    {
+        //        goto end;
+        //    }
+        //}
+    //    string lastPath = EditorPrefs.GetString("a4_OBJExport_lastPath", "");
+    //    string lastFileName = EditorPrefs.GetString("a4_OBJExport_lastFile", "unityexport.obj");
+    //    string expFile = EditorUtility.SaveFilePanel("Export OBJ", lastPath, lastFileName, "obj");
+    //    if (expFile.Length > 0)
+    //    {
+    //        var fi = new System.IO.FileInfo(expFile);
+    //        EditorPrefs.SetString("a4_OBJExport_lastFile", fi.Name);
+    //        EditorPrefs.SetString("a4_OBJExport_lastPath", fi.Directory.FullName);
+    //        Export(expFile);
+    //    }
+    //end:;
     }
 
-    public void Export(string exportPath)
+    public void Export(string exportPath,List <GameObject> export)
     {
         //init stuff
         Dictionary<string, bool> materialCache = new Dictionary<string, bool>();
         var exportFileInfo = new System.IO.FileInfo(exportPath);
         lastExportFolder = exportFileInfo.Directory.FullName;
         string baseFileName = System.IO.Path.GetFileNameWithoutExtension(exportPath);
-        EditorUtility.DisplayProgressBar("Exporting OBJ", "Please wait.. Starting export.", 0);
+     //   EditorUtility.DisplayProgressBar("Exporting OBJ", "Please wait.. Starting export.", 0);
 
         //get list of required export things
         MeshFilter[] sceneMeshes;
         if (onlySelectedObjects)
         {
             List<MeshFilter> tempMFList = new List<MeshFilter>();
-            foreach (GameObject g in Selection.gameObjects)
+            foreach (GameObject g in export)
             {
 
                 MeshFilter f = g.GetComponent<MeshFilter>();
@@ -151,14 +151,14 @@ public class OBJExporter : ScriptableWizard
                 {
                     if (mr.isPartOfStaticBatch)
                     {
-                        EditorUtility.ClearProgressBar();
-                        EditorUtility.DisplayDialog("Error", "Static batched object detected. Static batching is not compatible with this exporter. Please disable it before starting the player.", "OK");
+                     ///   EditorUtility.ClearProgressBar();
+                     //   EditorUtility.DisplayDialog("Error", "Static batched object detected. Static batching is not compatible with this exporter. Please disable it before starting the player.", "OK");
                         return;
                     }
                 }
             }
         }
-        
+
         //work on export
         StringBuilder sb = new StringBuilder();
         StringBuilder sbMaterials = new StringBuilder();
@@ -170,11 +170,11 @@ public class OBJExporter : ScriptableWizard
         }
         float maxExportProgress = (float)(sceneMeshes.Length + 1);
         int lastIndex = 0;
-        for(int i = 0; i < sceneMeshes.Length; i++)
+        for (int i = 0; i < sceneMeshes.Length; i++)
         {
             string meshName = sceneMeshes[i].gameObject.name;
             float progress = (float)(i + 1) / maxExportProgress;
-            EditorUtility.DisplayProgressBar("Exporting objects... (" + Mathf.Round(progress * 100) + "%)", "Exporting object " + meshName, progress);
+          //  EditorUtility.DisplayProgressBar("Exporting objects... (" + Mathf.Round(progress * 100) + "%)", "Exporting object " + meshName, progress);
             MeshFilter mf = sceneMeshes[i];
             MeshRenderer mr = sceneMeshes[i].gameObject.GetComponent<MeshRenderer>();
 
@@ -187,10 +187,10 @@ public class OBJExporter : ScriptableWizard
                 }
                 sb.AppendLine("g " + exportName);
             }
-            if(mr != null && generateMaterials)
+            if (mr != null && generateMaterials)
             {
                 Material[] mats = mr.sharedMaterials;
-                for(int j=0; j < mats.Length; j++)
+                for (int j = 0; j < mats.Length; j++)
                 {
                     Material m = mats[j];
                     if (!materialCache.ContainsKey(m.name))
@@ -205,7 +205,7 @@ public class OBJExporter : ScriptableWizard
             //export the meshhh :3
             Mesh msh = mf.sharedMesh;
             int faceOrder = (int)Mathf.Clamp((mf.gameObject.transform.lossyScale.x * mf.gameObject.transform.lossyScale.z), -1, 1);
-            
+
             //export vector data (FUN :D)!
             foreach (Vector3 vx in msh.vertices)
             {
@@ -214,10 +214,10 @@ public class OBJExporter : ScriptableWizard
                 {
                     v = MultiplyVec3s(v, mf.gameObject.transform.lossyScale);
                 }
-                
+
                 if (applyRotation)
                 {
-  
+
                     v = RotateAroundPoint(v, Vector3.zero, mf.gameObject.transform.rotation);
                 }
 
@@ -231,7 +231,7 @@ public class OBJExporter : ScriptableWizard
             foreach (Vector3 vx in msh.normals)
             {
                 Vector3 v = vx;
-                
+
                 if (applyScale)
                 {
                     v = MultiplyVec3s(v, mf.gameObject.transform.lossyScale.normalized);
@@ -249,9 +249,9 @@ public class OBJExporter : ScriptableWizard
                 sb.AppendLine("vt " + v.x + " " + v.y);
             }
 
-            for (int j=0; j < msh.subMeshCount; j++)
+            for (int j = 0; j < msh.subMeshCount; j++)
             {
-                if(mr != null && j < mr.sharedMaterials.Length)
+                if (mr != null && j < mr.sharedMaterials.Length)
                 {
                     string matName = mr.sharedMaterials[j].name;
                     sb.AppendLine("usemtl " + matName);
@@ -262,12 +262,12 @@ public class OBJExporter : ScriptableWizard
                 }
 
                 int[] tris = msh.GetTriangles(j);
-                for(int t = 0; t < tris.Length; t+= 3)
+                for (int t = 0; t < tris.Length; t += 3)
                 {
                     int idx2 = tris[t] + 1 + lastIndex;
                     int idx1 = tris[t + 1] + 1 + lastIndex;
                     int idx0 = tris[t + 2] + 1 + lastIndex;
-                    if(faceOrder < 0)
+                    if (faceOrder < 0)
                     {
                         sb.AppendLine("f " + ConstructOBJString(idx2) + " " + ConstructOBJString(idx1) + " " + ConstructOBJString(idx0));
                     }
@@ -275,7 +275,7 @@ public class OBJExporter : ScriptableWizard
                     {
                         sb.AppendLine("f " + ConstructOBJString(idx0) + " " + ConstructOBJString(idx1) + " " + ConstructOBJString(idx2));
                     }
-                    
+
                 }
             }
 
@@ -290,15 +290,15 @@ public class OBJExporter : ScriptableWizard
         }
 
         //export complete, close progress dialog
-        EditorUtility.ClearProgressBar();
+      //  EditorUtility.ClearProgressBar();
     }
-   
-    string TryExportTexture(string propertyName,Material m)
+
+    string TryExportTexture(string propertyName, Material m)
     {
         if (m.HasProperty(propertyName))
         {
             Texture t = m.GetTexture(propertyName);
-            if(t != null)
+            if (t != null)
             {
                 return ExportTexture((Texture2D)t);
             }
@@ -309,23 +309,23 @@ public class OBJExporter : ScriptableWizard
     {
         try
         {
-            if (autoMarkTexReadable)
-            {
-                string assetPath = AssetDatabase.GetAssetPath(t);
-                var tImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
-                if (tImporter != null)
-                {
-                    tImporter.textureType = TextureImporterType.Default;
+            //if (autoMarkTexReadable)
+            //{
+            //    string assetPath = AssetDatabase.GetAssetPath(t);
+            //    var tImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+            //    if (tImporter != null)
+            //    {
+            //        tImporter.textureType = TextureImporterType.Default;
 
-                    if (!tImporter.isReadable)
-                    {
-                        tImporter.isReadable = true;
+            //        if (!tImporter.isReadable)
+            //        {
+            //            tImporter.isReadable = true;
 
-                        AssetDatabase.ImportAsset(assetPath);
-                        AssetDatabase.Refresh();
-                    }
-                }
-            }
+            //            AssetDatabase.ImportAsset(assetPath);
+            //            AssetDatabase.Refresh();
+            //        }
+            //    }
+            //}
             string exportName = lastExportFolder + "\\" + t.name + ".png";
             Texture2D exTexture = new Texture2D(t.width, t.height, TextureFormat.ARGB32, false);
             exTexture.SetPixels(t.GetPixels());
@@ -368,7 +368,8 @@ public class OBJExporter : ScriptableWizard
             Color sc = m.GetColor("_SpecColor");
             sb.AppendLine("Ks " + sc.r.ToString() + " " + sc.g.ToString() + " " + sc.b.ToString());
         }
-        if (exportTextures) {
+        if (exportTextures)
+        {
             //diffuse
             string exResult = TryExportTexture("_MainTex", m);
             if (exResult != "false")
@@ -388,14 +389,14 @@ public class OBJExporter : ScriptableWizard
                 sb.AppendLine("map_Bump " + exResult);
             }
 
-    }
+        }
         sb.AppendLine("illum 2");
         return sb.ToString();
     }
-    [MenuItem("File/Export/Wavefront OBJ")]
+   // [MenuItem("File/Export/Wavefront OBJ")]
     static void CreateWizard()
     {
-        ScriptableWizard.DisplayWizard("Export OBJ", typeof(OBJExporter), "Export");
+     //   ScriptableWizard.DisplayWizard("Export OBJ", typeof(OBJExporter), "Export");
+       // AnotherFileBrowser.Windows.FileBrowser;
     }
 }
-#endif

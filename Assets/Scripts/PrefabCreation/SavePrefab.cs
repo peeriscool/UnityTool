@@ -2,29 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using AnotherFileBrowser;
-public class SavePrefab : MonoBehaviour
-{
-	public static SavePrefab Instance { get; private set; }  //singelton refrence
-	public bool Savebool = false;
-	void Awake()
-	{
-		// If there is an instance, and it's not me, delete myself.
 
-		if (Instance != null && Instance != this)
-		{
-			Destroy(this); //monobehaviour dependicy
-		}
-		else
-		{
-			Instance = this;
-		}
-	}
+public static class SavePrefab
+{
 	/// <summary>
 	/// Creates a Prefab in the editor
 	/// </summary>
 	/// <param name="obj">Object to save as prefab</param>
-	public void Save(GameObject obj) //Unity editor dependicy
+	public static void Save(GameObject obj) //Unity editor dependicy
 	{
 #if UNITY_EDITOR
 
@@ -38,11 +23,14 @@ public class SavePrefab : MonoBehaviour
 #endif
 
 	}
-	//Callable function for saving object during runtime 
-	public void ObjExportUtil(string _path)
+	//editor function for saving object 
+	public static void ObjExportUtil(string _path,List<GameObject> objs)
 	{
-		OBJExporter exportutil = new OBJExporter();
-		exportutil.Export(_path);
-
+		ObjExporterStandalone exportUtil = new ObjExporterStandalone();
+		//OBJExporter exportutil = new OBJExporter();
+		//exportutil.Export(_path); //ExportRutime(_path);
+		exportUtil.Export(_path, objs);
 	}
+
+
 }

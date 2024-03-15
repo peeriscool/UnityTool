@@ -5,6 +5,7 @@ Licensed under the MIT License[3]
 [3]: https://opensource.org/licenses/MIT
 */
 
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -237,19 +238,37 @@ public class DragManipulator : IManipulator {
 	public virtual void ResetPosition() {
 		target.transform.position = Vector3.zero;
 	}
+	protected virtual bool CanDrop(Vector3 position, out VisualElement droppable)
+	{
+		var visualElements = new List<VisualElement>();
+		target.panel.PickAll(position, visualElements);
 
-	protected virtual bool CanDrop(Vector3 position, out VisualElement droppable) {
-		droppable = target.panel.Pick(position);
-		var element = droppable;
-		// Walk up parent elements to see if any are droppable.
-		while (element != null && ! element.ClassListContains(droppableId))
-			element = element.parent;
-		if (element != null) {
-			droppable = element;
-			return true;
+		for (int i = 0; i < visualElements.Count; i++)
+		{
+			if (visualElements[i].ClassListContains(droppableId))
+			{
+				droppable = visualElements[i];
+
+				return true;
+			}
 		}
+
+		droppable = null;
+
 		return false;
 	}
+	//protected virtual bool CanDrop(Vector3 position, out VisualElement droppable) {
+	//	droppable = target.panel.Pick(position);
+	//	var element = droppable;
+	//	// Walk up parent elements to see if any are droppable.
+	//	while (element != null && ! element.ClassListContains(droppableId))
+	//		element = element.parent;
+	//	if (element != null) {
+	//		droppable = element;
+	//		return true;
+	//	}
+	//	return false;
+	//}
 
 	private void PointerMove(PointerMoveEvent ev) {
 		if (! isDragging)

@@ -4,64 +4,52 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
-
+//https://unity.com/how-to/use-command-pattern-flexible-and-extensible-game-systems
 public class CommandHandler
 {
-	public static CommandHandler instance = new CommandHandler();	
-	private List <ICommand> CommandList = new List<ICommand>();
-	private int index;
+	public static CommandHandler instance = new CommandHandler();
+	private static Stack<ICommand> _undoStack = new Stack<ICommand>();
+	private static Stack<ICommand> _redoStack = new Stack<ICommand>();
+
     CommandHandler() 
 	{
         instance = this;
     }
-    public void AddCommand(ICommand command)
-	{
-		if(index < CommandList.Count)
-		CommandList.RemoveRange(index,CommandList.Count - index);
-	    
-		CommandList.Add(command);
-		command.Execute();
-		index++;
-    }
 
-    /// <summary>
-    /// Undo Command from commandlist if possible
-    /// </summary>
-    /// <returns>Bool</returns>
-    public bool UndoComand()
-    {		
-	    if(CommandList.Count == 0)
-		    return false;
-	    if (index > 0)
-	    {
-	    	CommandList[index -1].Undo();
-		    index--;   
-	    }
-	    return true;
-    }
-    
+	public static void ExecuteCommand(ICommand command)
+	{
+		command.Execute();
+		_undoStack.Push(command);
+
+		// clear out the redo stack if we make a new move
+		_redoStack.Clear();
+	}
 	/// <summary>
-	/// Redo Command from commandlist if possible
+	/// Undo Command from command stack if not 0
 	/// </summary>
 	/// <returns>Bool</returns>
-	public bool RedoCommand()
-	{
-		if(CommandList.Count == 0) return false;
-		if(index < CommandList.Count)
-		{
-			index++;
-			CommandList[index - 1].Execute();
-		}
-		return true;
-	}
+	public static void UndoComand()
+    {		
+	    if(_undoStack.Count > 0)
+        {
+			ICommand activecommand = _undoStack.Pop();
+			_redoStack.Push(activecommand);
+			activecommand.Undo();
+        }
+  
+    }
 
-	public void IcommandHandler(ICommand com)
+	/// <summary>
+	/// Redo Command from command stack if not 0
+	/// </summary>
+	/// <returns>Bool</returns>
+	public static void RedoCommand()
 	{
-		if(com.GetType() == typeof(IMove))
+		if (_redoStack.Count > 0)
 		{
-			//
-			CommandList.Add(com);
-            com.Execute();
+			ICommand activeCommand = _redoStack.Pop();
+			_undoStack.Push(activeCommand);
+			activeCommand.Execute();
 		}
 	}
 }

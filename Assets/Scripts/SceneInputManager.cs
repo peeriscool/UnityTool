@@ -9,7 +9,7 @@ class SceneInputManager
     Actions Playeractions;
     enum Modifier { none, Ctrl, alt, shift }
     Modifier active;
-    bool selected = false;
+
     public void EnableControls()
     {
         active = Modifier.none;
@@ -17,7 +17,7 @@ class SceneInputManager
         Playeractions.InputMapping.Letters.Enable();
         Playeractions.InputMapping.Menucontrolls.Enable();
         Playeractions.InputMapping.Mouse.Enable();
-        Playeractions.InputMapping.Mouse.started+= Mouse_context;
+        Playeractions.InputMapping.Mouse.started += Mouse_started;
         Playeractions.InputMapping.Mouse.performed += Mouse_context;
         Playeractions.InputMapping.Mouse.canceled += Mouse_context;
         Playeractions.InputMapping.Letters.performed += Letters_performed;
@@ -26,19 +26,29 @@ class SceneInputManager
         Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
     }
 
+    private void Mouse_started(InputAction.CallbackContext context) //seems to be prettymuch overwriten by performed
+    {
+        //if (context.started) //fires once
+        //{
+        //    Debug.Log("Started");
+        //    if (context.action.activeControl == Mouse.current.leftButton)
+        //    {
+        //        SelectionManager.instance.selection = SelectionManager.state.pickup;
+        //    }
+        //}
+    }
+
+    //change State of the mouse to Pickup,hold or Release
     private void Mouse_context(InputAction.CallbackContext context)
     {
-        if (context.started) //fires once
-        {
-            Debug.Log("Started");
-            if (context.action.activeControl == Mouse.current.leftButton)
-            {
-                    SelectionManager.instance.selection = SelectionManager.state.pickup;
-            }
-        }
+      
      
        if(context.performed) //pressing down
         {
+            if (context.action.activeControl == Mouse.current.leftButton && active == Modifier.shift) //multiselect
+            {
+                SelectionManager.instance.selection = SelectionManager.state.hold;
+            }
             if (context.action.activeControl == Mouse.current.leftButton) 
             {
                 SelectionManager.instance.selection = SelectionManager.state.hold;                
@@ -54,12 +64,28 @@ class SceneInputManager
         }
     }
 
+    //esc to toggle ui
     private void Menucontrolls_performed(InputAction.CallbackContext context)
     {
         if (context.action.activeControl == Keyboard.current.escapeKey)
         {
             UIInputManager.toggleUi();
         }
+        //hold functions
+        //if (context.action.activeControl == Keyboard.current.enterKey)
+        //{
+        //    //DO confirm
+        //}
+
+        //if (context.action.activeControl == Keyboard.current.leftShiftKey)
+        //{
+        //    //modifier
+        //}
+
+        //if (context.action.activeControl == Keyboard.current.leftCtrlKey)
+        //{
+        //    //modifier
+        //}
     }
 
     private void Menucontrolls_canceled(InputAction.CallbackContext context)
@@ -109,11 +135,13 @@ class SceneInputManager
         if (context.action.activeControl == Keyboard.current.zKey && active == Modifier.Ctrl)
         {
             Debug.Log(context.action.activeControl.name);
+            CommandHandler.UndoComand();
         }
         //If ctrl Redo
         if (context.action.activeControl == Keyboard.current.yKey && active == Modifier.Ctrl)
         {
             Debug.Log(context.action.activeControl.name);
+            CommandHandler.RedoCommand();
         }
         //If ctrl Paste
         if (context.action.activeControl == Keyboard.current.vKey && active == Modifier.Ctrl)

@@ -10,13 +10,17 @@ public class UIInputManager
     private static UIInputManager Instance;
     public UIDocument Menu;
     Scene ProjectScene; //should be moved to different class
+    Scene MenuScene; //should be moved to different class
+
     public UIInputManager(UIDocument Ui)
     {
+        MenuScene = SceneManager.GetActiveScene();
         Menu = Ui;
         CreateUI();
         Instance = this;
+        Debug.Log(MenuScene);
     }
-    private void CreateUI()
+    private void CreateUI() //creates the menu UI functions
     {
         VisualElement root = new VisualElement();
         root = Menu.rootVisualElement;//GetComponent<UIDocument>().rootVisualElement;
@@ -30,37 +34,67 @@ public class UIInputManager
         Loadbut.clicked += () => openProjectFile();
         Exitbut.clicked += () => quit();
     }
+
     public static void toggleUi()
-    { Instance.toggle(); }
+    {Instance.toggle(); Instance.Menuactive(); }
+
     void toggle()
     {
-        Menu.enabled = !Menu.enabled;
+        Menu.rootVisualElement.visible = !Menu.rootVisualElement.visible;
+    }
+    void Menuactive()
+    {
+        if (Menu.rootVisualElement.visible)
+        {
+            SceneManager.SetActiveScene(MenuScene);
+        }
+        else if (ProjectScene != null)
+        {
+            SceneManager.SetActiveScene(ProjectScene);
+        }
     }
     void openProjectFile()
     {
+
         var bp = new BrowserProperties();
-        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*"; //should be json format 
         bp.filterIndex = 0;
 
         new FileBrowser().OpenFileBrowser(bp, path =>
          {
-                  //Load Binary or Json format of project
                   Debug.Log(path);
-             Debug.Log("Load Binary or Json format of project");
+                  Debug.Log("Load Json formated project");
+             //json.load iets
          });
     }
+
     void Startproject()
     {
-        //   UnityEngine.SceneManagement.SceneManager.LoadScene("PeerSampleScene");
-       ProjectScene = SceneManager.CreateScene("ProjectFile_001");
-       Menu.enabled = false; //ToDo enable by esc
-       SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Sphere), ProjectScene);
-       SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Cube), ProjectScene);
+        ProjectScene = SceneManager.CreateScene("ProjectFile_001"); //should use a file version number
+        PopulateScene();
+        toggle();
+        //make project active scene
+        SceneManager.SetActiveScene(ProjectScene);
+        Program.instance.cameramovement.enabled = true;
+        Debug.Log(Program.instance.cameramovement.isActiveAndEnabled);
+    }
+    void PopulateScene() //runs when creating a new projectfile
+    {
+        //creating default objects in scene
+        SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Sphere), ProjectScene);
+        SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Cube), ProjectScene);
+       
+        GameObject commandmanager = new GameObject();
+        commandmanager.name = "commandmanager";
+        UIController  controller = commandmanager.AddComponent<UIController>();
+        controller.initialize();
+        SceneManager.MoveGameObjectToScene(commandmanager, ProjectScene);
+
         GameObject baseplane = GameObject.CreatePrimitive(PrimitiveType.Plane);
         baseplane.transform.localScale *= 10;
-        baseplane.GetComponent<Collider>().enabled = false;
+        baseplane.GetComponent<Collider>().enabled = false; //make ground planen non interactible
         SceneManager.MoveGameObjectToScene(baseplane, ProjectScene);
-        SceneManager.SetActiveScene(ProjectScene);
+
     }
     void quit()
     {
@@ -71,6 +105,7 @@ public class UIInputManager
         //if apllication
         Application.Quit();
     }
+
     private void OnApplicationQuit()
     {
         Debug.Log("Warning nothing is saved yet!");

@@ -47,19 +47,19 @@ public class CommandManager : MonoBehaviour
         //Do requested Command
         if (command == "Redo")
         {
-           print(CommandHandler.instance.RedoCommand());
+         //  print(CommandHandler.instance.RedoCommand());
             //if (CommandHandler.instance.RedoCommand() != true) {print("Redo"); };
         }
         if (command == "Undo")
 		{
-            print(CommandHandler.instance.UndoComand());
+          //  print(CommandHandler.instance.UndoComand());
             //	if(CommandHandler.instance.UndoComand()!= true){print("Undo");};
         }
         if (command == "SavePrefab")
         {
-             SavePrefab.Instance.Save(GameObject.Find("Player"));
+       //      SavePrefab.Instance.Save(GameObject.Find("Player"));
             string path = openProjectFile();
-            SavePrefab.Instance.ObjExportUtil(path);
+      //      SavePrefab.Instance.ObjExportUtil(path);
         }
 	}
     string openProjectFile()
@@ -84,7 +84,7 @@ public class CommandManager : MonoBehaviour
     public void OnSliderValueChanged (float Value)
 	{
         print(Value);
-        CommandHandler.instance.IcommandHandler(new IMove(GameObject.Find("Player").transform, Vector3.left, Value));
+      //  CommandHandler.instance.IcommandHandler(new IMove(GameObject.Find("Player").transform, Vector3.left, Value));
     }
   
 }

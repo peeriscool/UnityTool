@@ -33,89 +33,69 @@ class UIController : MonoBehaviour
         }
         LoadUI();
     }
-        void LoadUI()
-        {
-            //History
+    void LoadUI()
+    {
+        //History
 
-            //create buttons
-            Slider Scale = new Slider();
-            Scale.name = "scalevector";
-            Scale.label = "Scale";
-            // Scale.value = Vector3.one;
-            Scale.style.fontSize = 10;
+        //create buttons
+        Slider Scale = new Slider();
+        Scale.name = "scalevector";
+        Scale.label = "Scale";
+        // Scale.value = Vector3.one;
+        Scale.style.fontSize = 10;
 
-            //Vector3Field transform = new Vector3Field();
-            //transform.name = "transformvector";
-            //transform.label = "transform";
-            //transform.value = Vector3.zero;
-            //transform.style.fontSize = 10;
+        //Vector3Field transform = new Vector3Field();
+        //transform.name = "transformvector";
+        //transform.label = "transform";
+        //transform.value = Vector3.zero;
+        //transform.style.fontSize = 10;
 
-            Label transformlabel = new Label();
-            transformlabel.style.fontSize = 10;
-            transformlabel.name = "transform vector";
-            IntegerField transformX = new IntegerField();
-            IntegerField transformY = new IntegerField();
-            IntegerField transformZ = new IntegerField();
+        Label transformlabel = new Label();
+        transformlabel.style.fontSize = 10;
+        transformlabel.name = "transform vector";
+        IntegerField transformX = new IntegerField();
+        IntegerField transformY = new IntegerField();
+        IntegerField transformZ = new IntegerField();
 
-            transformX.value = 0;
-            transformY.value = 0;
-            transformZ.value = 0;
+        transformX.value = 0;
+        transformY.value = 0;
+        transformZ.value = 0;
 
-            transformX.label = "X";
-            transformY.label = "Y";
-            transformZ.label = "Z";
+        transformX.label = "X";
+        transformY.label = "Y";
+        transformZ.label = "Z";
 
-            transformX.style.fontSize = 10;
-            transformY.style.fontSize = 10;
-            transformZ.style.fontSize = 10;
-            transformX.AddToClassList("PalleteStyle");
-            transformX.style.maxHeight = 50;
-            transformX.style.maxWidth = 200;
+        transformX.style.fontSize = 10;
+        transformY.style.fontSize = 10;
+        transformZ.style.fontSize = 10;
+        transformX.AddToClassList("PalleteStyle");
+        transformX.style.maxHeight = 50;
+        transformX.style.maxWidth = 200;
 
-            // transformX.ElementAt(0).style
-            Vector4Field Rotation = new Vector4Field();
-            Rotation.name = "rotatevector";
-            Rotation.label = "rotate";
-            Rotation.value = new Vector4();
-            Rotation.style.fontSize = 10;
-            //Pallete
-            VisualElement root = GetComponent<UIDocument>().rootVisualElement;
-            Foldout transformation = root.Q<Foldout>("Translation");
+        Vector4Field Rotation = new Vector4Field();
+        Rotation.name = "rotatevector";
+        Rotation.label = "rotate";
+        Rotation.value = new Vector4();
+        Rotation.style.fontSize = 10;
+        //Pallete
+        VisualElement root = GetComponent<UIDocument>().rootVisualElement;
+        Foldout transformation = root.Q<Foldout>("Translation");
 
-            transformation.Add(Scale);
-            transformation.Add(transformlabel);
-            transformation.Add(transformX);
-            transformation.Add(transformY);
-            transformation.Add(transformZ);
-            transformation.Add(Rotation);
-            Button Exportbutton = root.Q<Button>("Export");
-            Button Savebutton = root.Q<Button>("SaveBut");
-            Button Import = root.Q<Button>("ImportBut");
-            Exportbutton.clicked += ExportEvent;
-            Savebutton.clicked += SaveEvent;
-            Import.clicked += ImportEvent;
-        //root.AddManipulator(new DragManipulator());
-        //root.RegisterCallback<DropEvent>(evt =>
-        //      Debug.Log($"{evt.target} dropped on {evt.droppable}"));
+        transformation.Add(Scale);
+        transformation.Add(transformlabel);
+        transformation.Add(transformX);
+        transformation.Add(transformY);
+        transformation.Add(transformZ);
+        transformation.Add(Rotation);
 
+        Button Exportbutton = root.Q<Button>("Export");
+        Button Savebutton = root.Q<Button>("SaveBut");
+        Button Import = root.Q<Button>("ImportBut");
+        Exportbutton.clicked += ExportEvent;
+        Savebutton.clicked += SaveEvent;
+        Import.clicked += ImportEvent;
+    }
 
-        //// Get a reference to the field from UXML and assign a value to it.
-        //var uxmlField = root.Q<Vector3Field>("Vector3Field");
-        //uxmlField.value = new Vector3(23.8f, 12.6f, 88.3f);
-
-        //// Create a new field, disable it, and give it a style class.
-        //var csharpField = new Vector3Field("C# Field");
-        //csharpField.SetEnabled(false);
-        //csharpField.AddToClassList("some-styled-field");
-        //csharpField.value = uxmlField.value;
-        //transformation.Add(csharpField);
-
-        //// Mirror the value of the UXML field into the C# field.
-        //uxmlField.RegisterCallback<ChangeEvent<Vector3>>((evt) =>
-        //{
-        //    csharpField.value = evt.newValue;
-        //});
-        }
     private void ImportEvent()
     {
         GameObject ImportedObject = new GameObject();
@@ -124,26 +104,70 @@ class UIController : MonoBehaviour
         var bp = new BrowserProperties();
         bp.filter = "Obj files (*.obj)|*.obj|All Files (*.*)|*.*"; //TODO:mtl
         bp.filterIndex = 0;
-        
-        //lambda function
+
+        //lambda expresion Anonimus function
+        //https://learn.microsoft.com/nl-nl/dotnet/csharp/language-reference/operators/lambda-expressions
         new FileBrowser().OpenFileBrowser(bp, path =>
         {
             Debug.Log("Loading" + bp + " Json project from" + path);
-            //json.load iets
-            // ImportWindow.OpenFileBrowser(bp, (path => ObjModel.Load(path))); 
             ImportedObject = ObjModel.Load(path);
         });
+        MeshRenderer render = ImportedObject.AddComponent<MeshRenderer>();
+        MeshFilter filter;
 
+        if (ImportedObject.TryGetComponent<MeshFilter>(out MeshFilter _filter)) //check if mesh comes with meshfilter
+        {
+            filter = _filter;
+        }
+        //else if(ImportedObject.GetComponentInChildren<MeshFilter>())//see if childeren of mesh have filter
+        //{
+        //    filter = ImportedObject.GetComponentInChildren<MeshFilter>();
+        //}
+        else //make empty filter
+        {
+            Debug.Log("Adding meshfilter to root");
+             filter = ImportedObject.AddComponent<MeshFilter>();
+        }
+        
+       //  
+       // BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
+
+        GenerateBoxcolliderOnMesh(ImportedObject, filter);
+        ImportedObject.AddComponent<MoveableBehaviour>();
+    }  
+    /// <summary>
+    /// NOT OPTIMIZED!!! Fixes the colliders when pivot point is not on mesh location
+    /// </summary>
+    /// <param name="ImportedObject"></param>
+    private void GenerateBoxcolliderOnMesh(GameObject ImportedObject,MeshFilter filter)
+    {
+       
         if (ImportedObject != null)
         {
-            Vector3 TrueCenter = new Vector3();
-            MeshFilter filter = ImportedObject.AddComponent<MeshFilter>();
             BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
             int Submeshcount = ImportedObject.transform.childCount;
-            Vector3 min = Vector3.zero;//childmesh.vertices[0];
-            Vector3 max = Vector3.zero;//childmesh.vertices[0];
-            Vector3[] center = new Vector3[Submeshcount];
-            if (filter.mesh.vertices.Length == 0 && Submeshcount != 0) //root object does not have any mesh data
+            Vector3 min = Vector3.zero;
+            Vector3 max = Vector3.zero;
+            Vector3 center = new Vector3();
+
+            //used if we need the childeren to calculate the colliders
+           List<Vector3> allmin = new List<Vector3>();
+            List<Vector3> allmax = new List<Vector3>();
+
+            if (filter.mesh.vertices.Length > 0) //use root to calculate boxcolider
+            {
+                Debug.Log("Running through" + " meshFilter for center");
+                for (int i = 0; i < filter.mesh.vertices.Length; i++)
+                {
+                    min = Vector3.Min(filter.mesh.vertices[i], min);
+                    max = Vector3.Max(filter.mesh.vertices[i], max);
+                    center += filter.mesh.vertices[i];
+                }
+                center.x = center.x / filter.mesh.vertices.Length;
+                center.y = center.y / filter.mesh.vertices.Length;
+                center.z = center.z / filter.mesh.vertices.Length;
+            }
+            else if (filter.mesh.vertices.Length == 0 && Submeshcount != 0) //root object does not have any mesh data
             {
                 Debug.Log("Running through" + Submeshcount + " child meshes");
                 //generate collider location on childeren
@@ -151,61 +175,41 @@ class UIController : MonoBehaviour
                 {
                     Transform child = ImportedObject.transform.GetChild(i);
                     Mesh childmesh = child.GetComponent<MeshFilter>().mesh;
-                    //start with first vertices as min and max
-                    //https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html
-                    center[i] = child.transform.TransformPoint(ImportedObject.transform.localPosition);
-                    Debug.Log(center[i] + "ChildPosition Relative");
+
                     if (childmesh != null)
                     {
-                        Debug.Log("Running through" + childmesh.vertices + " vertices");
+                        Debug.Log("Running through" + childmesh.vertices.Length + " vertices");
                         for (int j = 0; j < childmesh.vertices.Length; j++)
                         {
-                         //   Debug.Log(childmesh.vertices[j]);
+                            //   Debug.Log(childmesh.vertices[j]);
                             min = Vector3.Min(childmesh.vertices[j], min);
                             max = Vector3.Max(childmesh.vertices[j], max);
+                            allmin.Add(min);
+                            allmax.Add(max);
+                            center += childmesh.vertices[j];
                         }
                     }
+                    for (int x = 1; x < allmax.Count; x++)
+                    {
+                        max = Vector3.Max(allmax[x], allmax[x-1]);
+                    }
+                    //   center.x = center.x / childmesh.vertices.Length;
+                    //  center.y = center.y / childmesh.vertices.Length;
+                    //   center.z = center.z / childmesh.vertices.Length;
+                    center = Vector3.zero;
                     Debug.Log(childmesh.name + " minimal " + min + "root = " + ImportedObject.name);
                     Debug.Log(childmesh.name + " maximum " + max + "root = " + ImportedObject.name);
                 }
             }
-            //else if (filter.mesh.vertices.Length != 0)//calculate hitbox based on root mesh
-            //{
-            //    Vector3[] VerticesPosition = filter.mesh.vertices;
-
-            //    //Vector3 min = VerticesPosition[0];
-            //    // Vector3 max = VerticesPosition[0];
-            //    for (int i = 0; i < filter.mesh.vertexCount; i++)
-            //    {
-            //        min = Vector3.Min(VerticesPosition[i], min);
-            //        max = Vector3.Max(VerticesPosition[i], max);
-            //    }
-            //    Debug.Log("Min " + min);
-            //    Debug.Log("Max " + max);
-
-            //}
-            
-            Mycollider.size = Vector3.Max(min,max);
            
-            for (int i = 0; i < center.Length; i++)
-            {
-                TrueCenter.x += center[i].x;
-                TrueCenter.y += center[i].y;
-                TrueCenter.z += center[i].z;
-            }
+            Vector3 size = max;//Vector3.Max(min, max);
+            size.x = size.z;
+            Mycollider.size = size; //X value seems to be 0
 
-            TrueCenter.x /= Submeshcount;
-            TrueCenter.y /= Submeshcount;
-            TrueCenter.z /= Submeshcount;
-            Mycollider.center = TrueCenter;
-            Debug.Log("center " + TrueCenter);
+            Mycollider.center = center;
+            Debug.Log("center " + center);
         }
-       
-            //ImportedObject.transform.childCount
-
-            //maybe not necasery because the selection manager can add it as well
-            ImportedObject.AddComponent<MoveableBehaviour>();
-    }  
+    }
     private void SaveEvent()
     {
         //temp savedata

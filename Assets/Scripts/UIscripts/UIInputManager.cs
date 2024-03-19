@@ -18,7 +18,7 @@ public class UIInputManager
         Menu = Ui;
         CreateUI();
         Instance = this;
-        Debug.Log(MenuScene);
+        Debug.Log("Current Scene:"+MenuScene.name);
     }
     private void CreateUI() //creates the menu UI functions
     {
@@ -47,24 +47,27 @@ public class UIInputManager
         if (Menu.rootVisualElement.visible)
         {
             SceneManager.SetActiveScene(MenuScene);
+            Debug.Log("Current Scene:" + MenuScene.name);
         }
         else if (ProjectScene != null)
         {
             SceneManager.SetActiveScene(ProjectScene);
+            Debug.Log("Current Scene:" + ProjectScene.name);
         }
     }
     void openProjectFile()
     {
 
         var bp = new BrowserProperties();
-        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*"; //should be json format 
+        bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*"; //TODO: Implement Json
         bp.filterIndex = 0;
 
         new FileBrowser().OpenFileBrowser(bp, path =>
          {
-                  Debug.Log(path);
-                  Debug.Log("Load Json formated project");
+             Debug.Log("Loading"+ bp +" Json project from" + path);
              //json.load iets
+             JSONSerializer.Load<ProjectData>(path); //contains file name and extention
+             
          });
     }
 
@@ -75,13 +78,12 @@ public class UIInputManager
         toggle();
         //make project active scene
         SceneManager.SetActiveScene(ProjectScene);
-        Program.instance.cameramovement.enabled = true;
+        Program.instance.cameramovement.enabled = true;  //Not a fan of Doing this here but ok
         Debug.Log(Program.instance.cameramovement.isActiveAndEnabled);
     }
     void PopulateScene() //runs when creating a new projectfile
     {
         //creating default objects in scene
-        SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Sphere), ProjectScene);
         SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Cube), ProjectScene);
        
         GameObject commandmanager = new GameObject();

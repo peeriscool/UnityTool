@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using AnotherFileBrowser.Windows;
 
+//loads a UIDocument to the scene
 class UIController : MonoBehaviour
     {
     UIDocument Mydocument;
@@ -88,30 +89,41 @@ class UIController : MonoBehaviour
             transformation.Add(transformZ);
             transformation.Add(Rotation);
             Button Exportbutton = root.Q<Button>("Export");
+            Button Savebutton = root.Q<Button>("SaveBut");
             Exportbutton.clicked += ExportEvent;
+            Savebutton.clicked += SaveEvent;
         //root.AddManipulator(new DragManipulator());
         //root.RegisterCallback<DropEvent>(evt =>
         //      Debug.Log($"{evt.target} dropped on {evt.droppable}"));
-      
 
-            //// Get a reference to the field from UXML and assign a value to it.
-            //var uxmlField = root.Q<Vector3Field>("Vector3Field");
-            //uxmlField.value = new Vector3(23.8f, 12.6f, 88.3f);
 
-            //// Create a new field, disable it, and give it a style class.
-            //var csharpField = new Vector3Field("C# Field");
-            //csharpField.SetEnabled(false);
-            //csharpField.AddToClassList("some-styled-field");
-            //csharpField.value = uxmlField.value;
-            //transformation.Add(csharpField);
+        //// Get a reference to the field from UXML and assign a value to it.
+        //var uxmlField = root.Q<Vector3Field>("Vector3Field");
+        //uxmlField.value = new Vector3(23.8f, 12.6f, 88.3f);
 
-            //// Mirror the value of the UXML field into the C# field.
-            //uxmlField.RegisterCallback<ChangeEvent<Vector3>>((evt) =>
-            //{
-            //    csharpField.value = evt.newValue;
-            //});
+        //// Create a new field, disable it, and give it a style class.
+        //var csharpField = new Vector3Field("C# Field");
+        //csharpField.SetEnabled(false);
+        //csharpField.AddToClassList("some-styled-field");
+        //csharpField.value = uxmlField.value;
+        //transformation.Add(csharpField);
+
+        //// Mirror the value of the UXML field into the C# field.
+        //uxmlField.RegisterCallback<ChangeEvent<Vector3>>((evt) =>
+        //{
+        //    csharpField.value = evt.newValue;
+        //});
         }
+    private void SaveEvent()
+    {
+        //temp savedata
+        ProjectData data1 = new ProjectData();
+        data1.ProjectName = "ProjectFile_01";
+        data1.Version = 0.1f;
 
+        JSONSerializer.Save(data1.ProjectName,data1);
+        Debug.Log("Control if Data exists");
+    }
     private void ExportEvent()
     {
         //  SavePrefab.Save(GameObject.CreatePrimitive(PrimitiveType.Cube));

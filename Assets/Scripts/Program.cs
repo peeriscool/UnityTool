@@ -15,7 +15,7 @@ public class Program : MonoBehaviour
 
     Program()
     {
-        print("Load program");
+        print("Loading program");
         instance = this;
     }
 
@@ -23,8 +23,21 @@ public class Program : MonoBehaviour
     {
         UImanager = new UIInputManager(GetComponent<UIDocument>()); //initialize UIInputManager
         InputManager.EnableControls();
-        print("Load UI");
         cameramovement.enabled = false;
+    }
+    private void FixedUpdate()
+    {
+      if(InputManager.active == SceneInputManager.Modifier.Ctrl) //toggle Camera script
+        {
+            //Toggle CameraMovement Script
+            cameramovement.enabled =! cameramovement.enabled;
+            //toggle cursor
+            UnityEngine.Cursor.visible = !cameramovement.enabled;
+            Debug.Log("Toggle Camera" + cameramovement.enabled);
+            InputManager.active = SceneInputManager.Modifier.none;
+
+
+        }
     }
     //private void FixedUpdate()
     //{
@@ -40,7 +53,7 @@ public class Program : MonoBehaviour
     //    }
     //}
     //init UI 
-   
+
     //pass a path to load a json file as a project
     void LoadFile()
     {

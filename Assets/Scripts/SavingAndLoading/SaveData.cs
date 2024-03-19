@@ -18,11 +18,10 @@ public class SaveData
         }
         set { }
     }
-    public EditorProfile profile;
 
 
     public void OnLoadSave()
     {
-        SaveData.current = (SaveData)BinaryFormatManager.Load(Application.persistentDataPath + "/saves/save.save");
+        SaveData.current = JSONSerializer.Load<SaveData>(Application.persistentDataPath + "/saves/save.save");
     }
 }

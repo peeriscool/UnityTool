@@ -7,8 +7,8 @@ using UnityEngine.InputSystem;
 class SceneInputManager
 {
     Actions Playeractions;
-    enum Modifier { none, Ctrl, alt, shift }
-    Modifier active;
+    public enum Modifier { none, Ctrl, alt, shift }
+    public Modifier active;
 
     public void EnableControls()
     {

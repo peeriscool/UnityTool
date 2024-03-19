@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UIElements;
 using AnotherFileBrowser.Windows;
+using Dummiesman;
+using System.IO;
 
 //loads a UIDocument to the scene
 class UIController : MonoBehaviour
     {
     UIDocument Mydocument;
-    UIController()
-    {
-    }
+    FileBrowser ImportWindow;
     public void initialize()
     {
         Mydocument = this.gameObject.AddComponent<UIDocument>();
@@ -90,8 +90,10 @@ class UIController : MonoBehaviour
             transformation.Add(Rotation);
             Button Exportbutton = root.Q<Button>("Export");
             Button Savebutton = root.Q<Button>("SaveBut");
+            Button Import = root.Q<Button>("ImportBut");
             Exportbutton.clicked += ExportEvent;
             Savebutton.clicked += SaveEvent;
+            Import.clicked += ImportEvent;
         //root.AddManipulator(new DragManipulator());
         //root.RegisterCallback<DropEvent>(evt =>
         //      Debug.Log($"{evt.target} dropped on {evt.droppable}"));
@@ -114,6 +116,96 @@ class UIController : MonoBehaviour
         //    csharpField.value = evt.newValue;
         //});
         }
+    private void ImportEvent()
+    {
+        GameObject ImportedObject = new GameObject();
+        //Action<string> action = (pat);
+        OBJLoader ObjModel = new OBJLoader();
+        var bp = new BrowserProperties();
+        bp.filter = "Obj files (*.obj)|*.obj|All Files (*.*)|*.*"; //TODO:mtl
+        bp.filterIndex = 0;
+        
+        //lambda function
+        new FileBrowser().OpenFileBrowser(bp, path =>
+        {
+            Debug.Log("Loading" + bp + " Json project from" + path);
+            //json.load iets
+            // ImportWindow.OpenFileBrowser(bp, (path => ObjModel.Load(path))); 
+            ImportedObject = ObjModel.Load(path);
+        });
+
+        if (ImportedObject != null)
+        {
+            Vector3 TrueCenter = new Vector3();
+            MeshFilter filter = ImportedObject.AddComponent<MeshFilter>();
+            BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
+            int Submeshcount = ImportedObject.transform.childCount;
+            Vector3 min = Vector3.zero;//childmesh.vertices[0];
+            Vector3 max = Vector3.zero;//childmesh.vertices[0];
+            Vector3[] center = new Vector3[Submeshcount];
+            if (filter.mesh.vertices.Length == 0 && Submeshcount != 0) //root object does not have any mesh data
+            {
+                Debug.Log("Running through" + Submeshcount + " child meshes");
+                //generate collider location on childeren
+                for (int i = 0; i < Submeshcount; i++)
+                {
+                    Transform child = ImportedObject.transform.GetChild(i);
+                    Mesh childmesh = child.GetComponent<MeshFilter>().mesh;
+                    //start with first vertices as min and max
+                    //https://docs.unity3d.com/ScriptReference/Transform.TransformPoint.html
+                    center[i] = child.transform.TransformPoint(ImportedObject.transform.localPosition);
+                    Debug.Log(center[i] + "ChildPosition Relative");
+                    if (childmesh != null)
+                    {
+                        Debug.Log("Running through" + childmesh.vertices + " vertices");
+                        for (int j = 0; j < childmesh.vertices.Length; j++)
+                        {
+                         //   Debug.Log(childmesh.vertices[j]);
+                            min = Vector3.Min(childmesh.vertices[j], min);
+                            max = Vector3.Max(childmesh.vertices[j], max);
+                        }
+                    }
+                    Debug.Log(childmesh.name + " minimal " + min + "root = " + ImportedObject.name);
+                    Debug.Log(childmesh.name + " maximum " + max + "root = " + ImportedObject.name);
+                }
+            }
+            //else if (filter.mesh.vertices.Length != 0)//calculate hitbox based on root mesh
+            //{
+            //    Vector3[] VerticesPosition = filter.mesh.vertices;
+
+            //    //Vector3 min = VerticesPosition[0];
+            //    // Vector3 max = VerticesPosition[0];
+            //    for (int i = 0; i < filter.mesh.vertexCount; i++)
+            //    {
+            //        min = Vector3.Min(VerticesPosition[i], min);
+            //        max = Vector3.Max(VerticesPosition[i], max);
+            //    }
+            //    Debug.Log("Min " + min);
+            //    Debug.Log("Max " + max);
+
+            //}
+            
+            Mycollider.size = Vector3.Max(min,max);
+           
+            for (int i = 0; i < center.Length; i++)
+            {
+                TrueCenter.x += center[i].x;
+                TrueCenter.y += center[i].y;
+                TrueCenter.z += center[i].z;
+            }
+
+            TrueCenter.x /= Submeshcount;
+            TrueCenter.y /= Submeshcount;
+            TrueCenter.z /= Submeshcount;
+            Mycollider.center = TrueCenter;
+            Debug.Log("center " + TrueCenter);
+        }
+       
+            //ImportedObject.transform.childCount
+
+            //maybe not necasery because the selection manager can add it as well
+            ImportedObject.AddComponent<MoveableBehaviour>();
+    }  
     private void SaveEvent()
     {
         //temp savedata
@@ -138,13 +230,12 @@ class UIController : MonoBehaviour
     {
         string sendpath = "";
         var bp = new BrowserProperties();
-        bp.filter = "txt files (*.txt)|*.txt|All Files (*.*)|*.*";
+        bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*";
         bp.filterIndex = 0;
 
         new FileBrowser().OpenFileBrowser(bp, path =>
         {
             //   Load Binary or Json format of project
-
             Debug.Log(path);
             Debug.Log("Load Binary or Json format of project");
             sendpath = path;

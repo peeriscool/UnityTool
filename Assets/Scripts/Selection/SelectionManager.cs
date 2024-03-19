@@ -95,7 +95,7 @@ public class SelectionManager : MonoBehaviour
                     {
                         Debug.Log("Release");
                         
-                        IMove a = new IMove(mybehaviour, Worldposition);
+                        IMove a = new IMove(mybehaviour, Worldposition); //is value correct?
                         CommandHandler.ExecuteCommand(a);
                     }
                     selection = state.inactive;

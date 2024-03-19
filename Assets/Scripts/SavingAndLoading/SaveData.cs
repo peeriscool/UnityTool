@@ -22,6 +22,6 @@ public class SaveData
 
     public void OnLoadSave()
     {
-        SaveData.current = JSONSerializer.Load<SaveData>(Application.persistentDataPath + "/saves/save.save");
+        SaveData.current = JSONSerializer.Load<SaveData>(Application.persistentDataPath + "/saves/save.Json");
     }
 }

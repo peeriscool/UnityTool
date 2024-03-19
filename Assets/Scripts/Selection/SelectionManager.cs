@@ -17,6 +17,7 @@ public class SelectionManager : MonoBehaviour
     public enum state {inactive,pickup,hold,release }; //set status using mouse left right 
     public state selection = 0;
     Material matref;
+    Material[] matrefs;
     Transform lastselected;
     Vector3 Worldposition = new Vector3();
     Vector3 location = new Vector3();
@@ -31,9 +32,16 @@ public class SelectionManager : MonoBehaviour
     {
         if (lastselected != null)
         {
-            var LastRenderer = lastselected.GetComponent<Renderer>();
-            LastRenderer.material = matref;
-            lastselected = null;
+            MeshRenderer[] filters = lastselected.GetComponentsInChildren<MeshRenderer>();
+            for (int i = 0; i < filters.Length-1; i++)
+            {
+                filters[i].material = matrefs[i];
+                lastselected.GetChild(i).GetComponent<MeshRenderer>().material = matrefs[i];
+            }
+            lastselected.GetComponent<MeshRenderer>().material = matrefs[0];
+           //  var LastRenderer = lastselected.GetComponent<Renderer>();
+           // LastRenderer.material = matref;
+           lastselected = null;
         }
 
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -45,19 +53,27 @@ public class SelectionManager : MonoBehaviour
 
             #if UNITY_EDITOR
             Debug.DrawRay(transform.position, ray.direction, Color.green);
-            #endif
-
-            var renderer = selection.GetComponent<Renderer>();
-            if (renderer != null) //hit sucsses
+#endif
+            Renderer[] filters = selection.GetComponentsInChildren<Renderer>();
+            matrefs = new Material[filters.Length];
+            for (int i = 0; i < filters.Length; i++)
             {
-                matref = renderer.material;
-                Current = selection.gameObject;
-                if (Current.TryGetComponent<MoveableBehaviour>(out MoveableBehaviour b))
-                {
-                    renderer.material = Resources.Load<Material>("outlineMaterial");// new Material(Shader.Find("Diffuse"));
+                matrefs[i] = filters[i].material;
+                filters[i].material = Resources.Load<Material>("outlineMaterial");
+            }
+           
+           // var renderer = selection.GetComponent<Renderer>();
+           
+         //   if (renderer != null) //hit sucsses
+            {
+          //      matref = renderer.material;
+          //      Current = selection.gameObject;
+              //  if (Current.TryGetComponent<MoveableBehaviour>(out MoveableBehaviour b))
+            //    {
+            //        renderer.material = Resources.Load<Material>("outlineMaterial");// new Material(Shader.Find("Diffuse"));
                     lastselected = selection;
-                }
-                else { mybehaviour = Current.AddComponent<MoveableBehaviour>(); }
+             //   }
+             //   else { mybehaviour = Current.AddComponent<MoveableBehaviour>(); }
             }
         }
     }

@@ -4,7 +4,10 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using AnotherFileBrowser.Windows;
-
+/// <summary>
+/// TODO Rename To MENU InputManager
+/// 
+/// </summary>
 public class UIInputManager
 {
     private static UIInputManager Instance;
@@ -29,7 +32,6 @@ public class UIInputManager
         Button Newbut = root.Q<Button>("New");
         Button Loadbut = root.Q<Button>("Load");
         Button Exitbut = root.Q<Button>("Exit");
-
         Newbut.clicked += () => Startproject();
         Loadbut.clicked += () => openProjectFile();
         Exitbut.clicked += () => quit();
@@ -79,6 +81,7 @@ public class UIInputManager
         //make project active scene
         SceneManager.SetActiveScene(ProjectScene);
         Program.instance.cameramovement.enabled = true;  //Not a fan of Doing this here but ok
+        UnityEngine.Cursor.visible = false;
         Debug.Log(Program.instance.cameramovement.isActiveAndEnabled);
     }
     void PopulateScene() //runs when creating a new projectfile

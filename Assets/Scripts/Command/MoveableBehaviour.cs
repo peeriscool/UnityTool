@@ -11,14 +11,4 @@ public class MoveableBehaviour : MonoBehaviour
 	{
 		transform.position = transform.position + movement;
 	}
-
-	//public bool IsValidMove(Vector3 movement)
-	//{
-	//	return !Physics.Raycast(transform.position, movement, boardSpacing, obstacleLayer);
-	//}
-
-    void Update()
-	{
-	
-    }
 }

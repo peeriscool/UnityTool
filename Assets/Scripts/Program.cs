@@ -39,25 +39,4 @@ public class Program : MonoBehaviour
 
         }
     }
-    //private void FixedUpdate()
-    //{
-    //if(enableCamera)
-    //    {
-    //        UnityEngine.Cursor.visible = false;
-    //        this.GetComponent<FlyCamera>().enabled = true;
-    //    }
-    //    else
-    //    {
-    //        UnityEngine.Cursor.visible = true;
-    //        this.GetComponent<FlyCamera>().enabled = false;
-    //    }
-    //}
-    //init UI 
-
-    //pass a path to load a json file as a project
-    void LoadFile()
-    {
-
-    }
-
 }

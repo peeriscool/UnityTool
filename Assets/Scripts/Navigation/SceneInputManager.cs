@@ -42,7 +42,11 @@ class SceneInputManager
             {
                 SelectionManager.instance.selection = SelectionManager.state.hold;                
             }
-       }
+            if (context.action.activeControl == Mouse.current.rightButton)
+            {
+                SelectionManager.instance.selection = SelectionManager.state.Right;
+            }
+        }
 
         if (context.canceled) //released
         {

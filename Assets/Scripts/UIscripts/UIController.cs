@@ -1,19 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using AnotherFileBrowser.Windows;
 using Dummiesman;
-using System.IO;
+using System.Collections;
+using UnityEngine.Networking;
 
 //loads a UIDocument to the scene
 class UIController : MonoBehaviour
     {
+  static IntegerField transformX;
+  static IntegerField transformY;
+  static  IntegerField transformZ;
+  static  Vector4Field Rotation;
+  static Label transformlabel;
+  static Foldout transformation;
     UIDocument Mydocument;
-    FileBrowser ImportWindow;
     public void initialize()
     {
         Mydocument = this.gameObject.AddComponent<UIDocument>();
@@ -25,7 +27,6 @@ class UIController : MonoBehaviour
             var uiContainer = new VisualElement();
             visualTree.CloneTree(uiContainer);
             Mydocument.rootVisualElement.Add(uiContainer);
-          
         }
         else
         {
@@ -37,25 +38,12 @@ class UIController : MonoBehaviour
     {
         //History
 
-        //create buttons
-        Slider Scale = new Slider();
-        Scale.name = "scalevector";
-        Scale.label = "Scale";
-        // Scale.value = Vector3.one;
-        Scale.style.fontSize = 10;
-
-        //Vector3Field transform = new Vector3Field();
-        //transform.name = "transformvector";
-        //transform.label = "transform";
-        //transform.value = Vector3.zero;
-        //transform.style.fontSize = 10;
-
-        Label transformlabel = new Label();
+        transformlabel = new Label();
         transformlabel.style.fontSize = 10;
         transformlabel.name = "transform vector";
-        IntegerField transformX = new IntegerField();
-        IntegerField transformY = new IntegerField();
-        IntegerField transformZ = new IntegerField();
+        transformX = new IntegerField();
+        transformY = new IntegerField();
+        transformZ = new IntegerField();
 
         transformX.value = 0;
         transformY.value = 0;
@@ -72,28 +60,37 @@ class UIController : MonoBehaviour
         transformX.style.maxHeight = 50;
         transformX.style.maxWidth = 200;
 
-        Vector4Field Rotation = new Vector4Field();
+        Rotation = new Vector4Field();
         Rotation.name = "rotatevector";
         Rotation.label = "rotate";
         Rotation.value = new Vector4();
         Rotation.style.fontSize = 10;
         //Pallete
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
-        Foldout transformation = root.Q<Foldout>("Translation");
-
-        transformation.Add(Scale);
+        transformation = root.Q<Foldout>("Translation");
+        transformation.SetEnabled(false);
+        transformation.value = false;   
+      //  transformation.Add(Scale);
         transformation.Add(transformlabel);
         transformation.Add(transformX);
         transformation.Add(transformY);
         transformation.Add(transformZ);
         transformation.Add(Rotation);
-
+       
+        //create buttons
         Button Exportbutton = root.Q<Button>("Export");
         Button Savebutton = root.Q<Button>("SaveBut");
         Button Import = root.Q<Button>("ImportBut");
+        Button ImportTexture = root.Q<Button>("ImageBut");
+        //add functionality to UI
         Exportbutton.clicked += ExportEvent;
         Savebutton.clicked += SaveEvent;
         Import.clicked += ImportEvent;
+        ImportTexture.clicked += ImportTextureEvent;
+        transformX.RegisterValueChangedCallback(x => SetSelectedParameters());
+        transformY.RegisterValueChangedCallback(x => SetSelectedParameters());
+        transformZ.RegisterValueChangedCallback(x => SetSelectedParameters());
+        Rotation.RegisterValueChangedCallback(x => SetSelectedParameters());
     }
 
     private void ImportEvent()
@@ -134,7 +131,13 @@ class UIController : MonoBehaviour
 
         GenerateBoxcolliderOnMesh(ImportedObject, filter);
         ImportedObject.AddComponent<MoveableBehaviour>();
-    }  
+    } 
+    private void ImportTextureEvent()
+    {
+        FileBrowserUpdate util = this.gameObject.AddComponent<FileBrowserUpdate>();
+        util.OpenFileBrowser();
+    }
+    
     /// <summary>
     /// NOT OPTIMIZED!!! Fixes the colliders when pivot point is not on mesh location
     /// </summary>
@@ -234,7 +237,7 @@ class UIController : MonoBehaviour
     {
         string sendpath = "";
         var bp = new BrowserProperties();
-        bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*";
+        bp.filter = "obj files (*.obj)|*.obj|All Files (*.*)|*.*";
         bp.filterIndex = 0;
 
         new FileBrowser().OpenFileBrowser(bp, path =>
@@ -246,5 +249,48 @@ class UIController : MonoBehaviour
 
         });
         return sendpath;
+    }
+    public static void UpdateUIParameters()
+    {
+        if (SelectionManager.instance.Current)
+        {
+            transformX.value = (int)SelectionManager.instance.Current.transform.position.x;
+            transformY.value = (int)SelectionManager.instance.Current.transform.position.y;
+            transformZ.value = (int)SelectionManager.instance.Current.transform.position.z;
+            Rotation.value =
+                new Vector4
+                (
+                    SelectionManager.instance.Current.transform.rotation.x,
+                    SelectionManager.instance.Current.transform.rotation.y,
+                    SelectionManager.instance.Current.transform.rotation.z,
+                    SelectionManager.instance.Current.transform.rotation.w
+                );
+        }
+    }
+    public static void SetSelectedParameters()
+    {
+        if(SelectionManager.instance.Current)
+        {
+            Vector3 position = new Vector3(transformX.value, transformY.value, transformZ.value);
+            SelectionManager.instance.Current.transform.position = position;
+            SelectionManager.instance.Current.transform.rotation =
+                new Quaternion
+                (
+                    Rotation.value.x,
+                    Rotation.value.y,
+                    Rotation.value.z,
+                    Rotation.value.w
+                );
+        }
+      
+    }
+    public static void PalleteObjectMenu(string name)
+    {
+        transformlabel.text = name;
+    }
+    public static void SetPallete(bool status)
+    {
+        transformation.SetEnabled(status);
+        transformation.value = status;  
     }
 }

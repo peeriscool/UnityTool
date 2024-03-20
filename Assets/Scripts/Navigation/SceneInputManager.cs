@@ -17,7 +17,6 @@ class SceneInputManager
         Playeractions.InputMapping.Letters.Enable();
         Playeractions.InputMapping.Menucontrolls.Enable();
         Playeractions.InputMapping.Mouse.Enable();
-        Playeractions.InputMapping.Mouse.started += Mouse_started;
         Playeractions.InputMapping.Mouse.performed += Mouse_context;
         Playeractions.InputMapping.Mouse.canceled += Mouse_context;
         Playeractions.InputMapping.Letters.performed += Letters_performed;
@@ -26,17 +25,7 @@ class SceneInputManager
         Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
     }
 
-    private void Mouse_started(InputAction.CallbackContext context) //seems to be prettymuch overwriten by performed
-    {
-        //if (context.started) //fires once
-        //{
-        //    Debug.Log("Started");
-        //    if (context.action.activeControl == Mouse.current.leftButton)
-        //    {
-        //        SelectionManager.instance.selection = SelectionManager.state.pickup;
-        //    }
-        //}
-    }
+   
 
     //change State of the mouse to Pickup,hold or Release
     private void Mouse_context(InputAction.CallbackContext context)
@@ -45,7 +34,7 @@ class SceneInputManager
      
        if(context.performed) //pressing down
         {
-            if (context.action.activeControl == Mouse.current.leftButton && active == Modifier.shift) //multiselect
+            if (context.action.activeControl == Mouse.current.leftButton && active == Modifier.shift) //TODO multiselect
             {
                 SelectionManager.instance.selection = SelectionManager.state.hold;
             }

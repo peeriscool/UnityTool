@@ -126,10 +126,13 @@ public class SelectionManager : MonoBehaviour
             matref = renderer.material;
 
             //set selected object and make sure we assign materials back afterwards
-            Current = selection.gameObject;
-            UIController.PalleteObjectMenu(Current.name);
-            UIController.SetPallete(true);
-            lastselected = selection;
+            if(selection.gameObject)
+            {
+                Current = selection.gameObject;
+                UIController.PalleteObjectMenu(Current.name);
+                UIController.SetPallete(true);
+                lastselected = selection;
+            }
         }
 
         if (ground.Raycast(ray, out hitDistance))

@@ -215,13 +215,17 @@ class UIController : MonoBehaviour
     }
     private void SaveEvent()
     {
-        //temp savedata
-        ProjectData data1 = new ProjectData();
-        data1.ProjectName = "ProjectFile_01";
-        data1.Version = 0.1f;
+        var bp = new BrowserProperties();
+        bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*";
+        bp.filterIndex = 0;
+        //JsonFileToProject.CreateObjects();
 
-        JSONSerializer.Save(data1.ProjectName,data1);
-        Debug.Log("Control if Data exists");
+        new FileBrowser().SaveFileBrowser(bp,"ProjectFile_01",".json" , SavePath =>
+         {
+             JSONSerializer.Save(SavePath, JsonFileToProject.ProjectFile);
+         });
+        //temp savedata
+       
     }
     private void ExportEvent()
     {
@@ -244,7 +248,7 @@ class UIController : MonoBehaviour
         {
             //   Load Binary or Json format of project
             Debug.Log(path);
-            Debug.Log("Load Binary or Json format of project");
+            Debug.Log("Load Json project");
             sendpath = path;
 
         });

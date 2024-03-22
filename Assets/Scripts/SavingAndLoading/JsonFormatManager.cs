@@ -53,7 +53,7 @@ public class JSONSerializer
         if (!string.IsNullOrEmpty(filename))
         {
             string path = Application.persistentDataPath + filename + ".Json"; //should create a folder persistentdatapath +/Folder/ + Filenmae + "Json"
-            File.WriteAllText(path, JsonUtility.ToJson(data));
+            File.WriteAllText(path, JsonUtility.ToJson(data,true));
             Debug.Log("Saving Data to: " + Application.persistentDataPath + filename);
         }
     }
@@ -68,7 +68,7 @@ public class JSONSerializer
         if(!string.IsNullOrEmpty(Path))
         {
             //if given path is not empty or null, Write data to location
-            File.WriteAllText(Path, JsonUtility.ToJson(data));
+            File.WriteAllText(Path, JsonUtility.ToJson(data,true));
             Debug.Log("Saving Data to: " +Path);
         }
         else

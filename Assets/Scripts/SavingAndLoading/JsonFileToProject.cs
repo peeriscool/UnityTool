@@ -12,7 +12,7 @@ static class JsonFileToProject
     public static void LoadData(ProjectData _data)
     {
         ProjectFile = _data;
-        Program.instance.UImanager.StartProjectFromJson(ProjectFile.ProjectName); //create scene where we can add the content to handle some ui elements
+       // Program.instance.UImanager.StartProjectFromJson(ProjectFile.ProjectName); //create scene where we can add the content to handle some ui elements
        
         for (int i = 0; i < ProjectFile.SceneObjects.Count; i++) //load data from projectfile
         {
@@ -76,7 +76,7 @@ public class GameObjectInScene
             Mymesh = new MeshSaveData(obj.GetComponent<MeshFilter>().mesh);
 
         }
-    public GameObjectInScene(GameObject obj)
+        public GameObjectInScene(GameObject obj)
         {
             reference = obj;
             Name = obj.name;
@@ -100,7 +100,11 @@ public class GameObjectInScene
             myobj.transform.localScale = Scale;
             myobj.transform.position = Position;
             myobj.transform.rotation = Rotation;
-            myobj.AddComponent<MeshRenderer>();
+            if(!myobj.GetComponent<MeshRenderer>())
+             {
+                MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
+                renderer.material = new Material(Shader.Find("Standard (Specular setup)"));
+             }
             if(GameObject.Find("commandmanager"))
             {
                 GameObject.Find("commandmanager").GetComponent<UIController>().GenerateBoxcolliderOnMesh(myobj, myobj.AddComponent<MeshFilter>());
@@ -114,7 +118,7 @@ public class GameObjectInScene
             mesh.vertices = Mymesh.vertices;
             mesh.triangles = Mymesh.triangles;
             mesh.normals = Mymesh.normals;
-
+            reference = myobj;
             return myobj;
         }
     }

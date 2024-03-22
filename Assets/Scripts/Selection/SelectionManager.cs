@@ -50,7 +50,7 @@ public class SelectionManager : MonoBehaviour
                     if (Current != null)
                     {
                         Selected = true;
-                      
+                       
                     }
                         selection = state.inactive;
                 }
@@ -59,7 +59,7 @@ public class SelectionManager : MonoBehaviour
                 {
                     if(Selected)
                     {
-                        UIController.UpdateUIParameters();
+                        UIController.SetScaleParameters();
                         Ray Zray = Camera.main.ScreenPointToRay(Input.mousePosition);
                         if (Physics.Raycast(Zray, out RaycastHit hitdata))
                         {
@@ -70,7 +70,7 @@ public class SelectionManager : MonoBehaviour
                                 Current.transform.position = hitPoint + m_offset;
                             }
                         }
-                       
+                  
                     }
                    
                     break;
@@ -82,7 +82,11 @@ public class SelectionManager : MonoBehaviour
                     Selected = false;
                     materialcheck();
                     UIController.PalleteObjectMenu("None");
+                    UIController.SetScaleParameters();
+                    UIController.UpdateUIParameters();
                     UIController.SetPallete(false);
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+
                 }
                 break;
         }

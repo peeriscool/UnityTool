@@ -9,15 +9,15 @@ using UnityEngine;
 [System.Serializable]
 public class ProjectData
 {
-   public ProjectData()
+    public string ProjectName;
+    public float Version;
+    public List<GameObjectInScene> SceneObjects;
+
+    public ProjectData()
     {
         SceneObjects = new List<GameObjectInScene>();
         SerializedObjects = new List<GameObject>();  
     }
-    public string ProjectName;
-    public float Version;
-    public List<GameObjectInScene> SceneObjects;
-  
     [System.NonSerialized]
     public static List<GameObject> SerializedObjects;
 
@@ -27,6 +27,27 @@ public class ProjectData
             Debug.Log("Nieuwe data:" + _Obj.name);
             GameObjectInScene obj = new GameObjectInScene(_Obj);
             JsonFileToProject.ProjectFile.SceneObjects.Add(obj);
+            SerializedObjects.Add(_Obj);
+    }
+    public GameObject GetItemFromList(GameObjectInScene refrence)
+    {
+        for (int i = 0; i < SceneObjects.Count; i++)
+        {
+            if(SceneObjects[i].Name == refrence.Name)
+            {
+              return SceneObjects[i].Getrefrence();
+            }
+        }
+        return null;
+	    //for (int i = 0; i < SerializedObjects.Count; i++)
+     //   {
+		   // Debug.Log(i.ToString() + "out of : " + SerializedObjects.Count);
+     //       if(SerializedObjects[i].name == refrence.Name)
+     //       {
+     //           return SerializedObjects[i];
+     //       }
+     //   }
+     //   return null;
     }
 }
 

@@ -44,8 +44,4 @@ public class Program : MonoBehaviour
             InputManager.active = SceneInputManager.Modifier.none;
         }
     }
-    public void AddobjectstoScene(GameObject obj)
-    {
-        GameObject.Instantiate(obj);
-    }
 }

@@ -16,7 +16,8 @@ static class JsonFileToProject
        
         for (int i = 0; i < ProjectFile.SceneObjects.Count; i++) //load data from projectfile
         {
-            Program.instance.AddobjectstoScene(ProjectFile.SceneObjects[i].make());
+            Debug.Log("adding:objects");
+            ProjectFile.SceneObjects[i].make();
         }
 
     }
@@ -34,6 +35,7 @@ static class JsonFileToProject
            /// SerializedObjects.Add(ProjectFile.SceneObjects[i].make());
         }
     }
+
 }
 
 
@@ -42,25 +44,53 @@ static class JsonFileToProject
 [System.Serializable]
 public class GameObjectInScene
     {
-
+      private GameObject reference;
+      public MeshSaveData Mymesh;  
       public string Name;
       public Vector3 Scale;
       public Vector3 Position;
       public Quaternion Rotation;
-        
+        public GameObject Getrefrence()
+        {
+        return reference;
+        }
         public GameObjectInScene(string name, Vector3 scale, Vector3 position, Quaternion rotation)
         {
+            GameObject obj = new GameObject();
+            reference = obj;
             Name = name;
             Scale = scale;
             Position = position;
             Rotation = rotation;
+            Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh);
+
         }
-        public GameObjectInScene(GameObject obj)
+        public GameObjectInScene(string name, Vector3 scale, Vector3 position, Quaternion rotation,PrimitiveType type)
         {
+            GameObject obj = GameObject.CreatePrimitive(type);
+            reference = obj;
+            Name = name;
+            Scale = scale;
+            Position = position;
+            Rotation = rotation;
+            Mymesh = new MeshSaveData(obj.GetComponent<MeshFilter>().mesh);
+
+        }
+    public GameObjectInScene(GameObject obj)
+        {
+            reference = obj;
             Name = obj.name;
             Scale = obj.transform.localScale;
             Position = obj.transform.position;
             Rotation = obj.transform.rotation;
+            if(obj.TryGetComponent<MeshFilter>( out MeshFilter filter))
+            {
+                Mymesh = new MeshSaveData(filter.mesh);
+            }
+            else
+            {
+            Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh);
+            }
         }
 
         public GameObject make()
@@ -70,7 +100,41 @@ public class GameObjectInScene
             myobj.transform.localScale = Scale;
             myobj.transform.position = Position;
             myobj.transform.rotation = Rotation;
+            myobj.AddComponent<MeshRenderer>();
+            if(GameObject.Find("commandmanager"))
+            {
+                GameObject.Find("commandmanager").GetComponent<UIController>().GenerateBoxcolliderOnMesh(myobj, myobj.AddComponent<MeshFilter>());
+
+            }
+            else
+            {
+                myobj.AddComponent<MeshFilter>();
+            }
+            Mesh mesh = myobj.GetComponent<MeshFilter>().mesh;
+            mesh.vertices = Mymesh.vertices;
+            mesh.triangles = Mymesh.triangles;
+            mesh.normals = Mymesh.normals;
+
             return myobj;
         }
     }
+
+//https://discussions.unity.com/t/is-it-posible-to-save-mesh-to-json/255406/2
+[System.Serializable]
+public class MeshSaveData
+{
+    public int[] triangles;
+    public Vector3[] vertices;  
+    public Vector3[] normals;
+
+    // add whatever properties of the mesh you need...
+
+    public MeshSaveData(Mesh mesh)
+    {
+        this.vertices = mesh.vertices;
+        this.triangles = mesh.triangles;
+        this.normals = mesh.normals;
+        // further properties...
+    }
+}
 

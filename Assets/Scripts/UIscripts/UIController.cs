@@ -5,7 +5,7 @@ using AnotherFileBrowser.Windows;
 using Dummiesman;
 using System.Collections;
 using UnityEngine.Networking;
-
+using System.IO;
 //loads a UIDocument to the scene
 class UIController : MonoBehaviour
     {
@@ -142,7 +142,7 @@ class UIController : MonoBehaviour
     /// NOT OPTIMIZED!!! Fixes the colliders when pivot point is not on mesh location
     /// </summary>
     /// <param name="ImportedObject"></param>
-    private void GenerateBoxcolliderOnMesh(GameObject ImportedObject,MeshFilter filter)
+    public void GenerateBoxcolliderOnMesh(GameObject ImportedObject,MeshFilter filter)
     {
        
         if (ImportedObject != null)
@@ -204,7 +204,11 @@ class UIController : MonoBehaviour
                     Debug.Log(childmesh.name + " maximum " + max + "root = " + ImportedObject.name);
                 }
             }
-           
+            else //meshfilter is empty
+            {
+                max = Vector3.one;
+            }
+
             Vector3 size = max;//Vector3.Max(min, max);
             size.x = size.z;
             Mycollider.size = size; //X value seems to be 0
@@ -215,14 +219,17 @@ class UIController : MonoBehaviour
     }
     private void SaveEvent()
     {
+
         var bp = new BrowserProperties();
         bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*";
         bp.filterIndex = 0;
-        //JsonFileToProject.CreateObjects();
+        
 
         new FileBrowser().SaveFileBrowser(bp,"ProjectFile_01",".json" , SavePath =>
          {
+             JsonFileToProject.ProjectFile.ProjectName = Path.GetFileName(SavePath);
              JSONSerializer.Save(SavePath, JsonFileToProject.ProjectFile);
+
          });
         //temp savedata
        

@@ -70,6 +70,7 @@ public class UIInputManager
     }
     public void StartProjectFromJson(string _ProjectName)
     {
+        Debug.Log("Start  Project  from  json");
         ProjectName = _ProjectName;
         Startproject();
     }
@@ -78,6 +79,7 @@ public class UIInputManager
         
         if(ProjectName == "Empty") //If itss a new file populate with serializable objects
         {
+            Debug.Log("New File_Empty");
             ProjectScene = SceneManager.CreateScene(ProjectName); //should use a file version number
             JsonFileToProject.ProjectFile = new ProjectData();
             JsonFileToProject.ProjectFile.ProjectName = ProjectName;
@@ -87,10 +89,9 @@ public class UIInputManager
         }
         else //we already should have the data from Json
         {
-            Debug.Log(ProjectName);
+            Debug.Log("Opening: "+ProjectName);
             for (int i = 0; i < SceneManager.sceneCount; i++)
             {
-                if(SceneManager.GetSceneAt(i).name == ProjectName) //check if scene already exists
                 if(SceneManager.GetSceneAt(i).name == ProjectName) //check if scene already exists
                 {
                     //Can not create scene until old one is removed
@@ -123,9 +124,20 @@ public class UIInputManager
     void PopulateScene() //runs when creating a new projectfile
     {
         //creating default objects in scene
-        GameObjectInScene startcube = new GameObjectInScene(GameObject.CreatePrimitive(PrimitiveType.Cube));
-        JsonFileToProject.AddObject(startcube);
-        SceneManager.MoveGameObjectToScene(startcube.make(),ProjectScene);
+        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        GameObjectInScene startcube = new GameObjectInScene(cube);
+        //GameObjectInScene startcube = new GameObjectInScene("StartCube",Vector3.one,Vector3.zero,Quaternion.identity,PrimitiveType.Cube);
+        JsonFileToProject.AddObject(startcube); //make it saveable
+        //GameObject a = JsonFileToProject.ProjectFile.SceneObjects;
+        try
+        {
+            SceneManager.MoveGameObjectToScene(JsonFileToProject.ProjectFile.GetItemFromList(startcube), ProjectScene);
+        }
+        catch (System.Exception)
+        {
+
+            throw;
+        }
           ///  SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Cube), ProjectScene)) ;
         CreateManager();
 

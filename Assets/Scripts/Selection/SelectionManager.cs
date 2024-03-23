@@ -61,15 +61,16 @@ public class SelectionManager : MonoBehaviour
                     {
                         UIController.SetScaleParameters();
                         Ray Zray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        if (Physics.Raycast(Zray, out RaycastHit hitdata))
-                        {
-                            if(Current)
+                      //  if (Physics.Raycast(Zray, out RaycastHit hitdata))
+                      //  {
+                            Debug.DrawRay(Zray.origin, Zray.direction, Color.green, 5.0f, true);
+                            if (Current)
                             {
-                                hitPoint = Zray.GetPoint(hitdata.distance);
+                               Vector3 hitPoint = Zray.GetPoint(Vector3.Distance(Camera.main.transform.position, Current.transform.position));
                                 hitPoint.y = 0;
-                                Current.transform.position = hitPoint + m_offset;
+                                Current.transform.position = ExtensionMethods.Round(hitPoint,0) + m_offset;
                             }
-                        }
+                      //  }
                   
                     }
                    
@@ -85,7 +86,7 @@ public class SelectionManager : MonoBehaviour
                     UIController.SetScaleParameters();
                     UIController.UpdateUIParameters();
                     UIController.SetPallete(false);
-            JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+                    JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
 
                 }
                 break;
@@ -144,7 +145,8 @@ public class SelectionManager : MonoBehaviour
             Vector3 hitPoint = ray.GetPoint(hitDistance);
             Current.transform.position = hitPoint;
             m_offset = Current.transform.position - hitPoint;
-            Current.transform.position = hitPoint + m_offset;
+            //  Current.transform.position = hitPoint + m_offset;
+            Debug.Log(hitPoint + "Groundraycast");
         }
 
     }

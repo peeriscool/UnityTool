@@ -368,7 +368,7 @@ class UIController : MonoBehaviour
             Vector3 position = new Vector3(transformX.value, transformY.value, transformZ.value);
             SelectionManager.instance.Current.transform.position = position;
             Quaternion rot = new Quaternion
-                (
+                (       
                     Rotation.value.x,
                     Rotation.value.y,
                     Rotation.value.z,

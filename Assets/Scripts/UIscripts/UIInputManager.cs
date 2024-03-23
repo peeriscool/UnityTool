@@ -156,7 +156,8 @@ public class UIInputManager
     {
         //make sure plane does not get exported to obj
         GameObject baseplane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        baseplane.transform.localScale *= 10;
+        baseplane.transform.localScale *= 4;
+        baseplane.name = "BasePlane";
         baseplane.GetComponent<Collider>().enabled = false; //make ground planen non interactible
         baseplane.GetComponent<Renderer>().material = Resources.Load<Material>("GridMaterial");
         SceneManager.MoveGameObjectToScene(baseplane, ProjectScene);

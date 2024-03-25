@@ -114,9 +114,9 @@ class UIController : MonoBehaviour
         Button Savebutton = root.Q<Button>("SaveBut");
         Button Import = root.Q<Button>("ImportBut");
         Button ImportTexture = root.Q<Button>("ImageBut");
+        ImportTexture.SetEnabled(false);
 
 
-      
             //add functionality to UI
         Exportbutton.clicked += ExportEvent;
         Savebutton.clicked += SaveEvent;
@@ -186,15 +186,23 @@ class UIController : MonoBehaviour
         //}
         else //make empty filter
         {
-            Debug.Log("Adding meshfilter to root");
-             filter = ImportedObject.AddComponent<MeshFilter>();
+            //try  to get from child
+            if(ImportedObject.GetComponentInChildren<MeshFilter>())
+            {
+                filter = ImportedObject.GetComponentInChildren<MeshFilter>();
+            }
+            else
+            {
+                Debug.Log("Adding meshfilter to root");
+                filter = ImportedObject.AddComponent<MeshFilter>();
+            }
         }
         
-       //  
        // BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
 
         GenerateBoxcolliderOnMesh(ImportedObject, filter);
-        ImportedObject.AddComponent<MoveableBehaviour>();
+        JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject,filter));
+        // ImportedObject.AddComponent<MoveableBehaviour>();
     } 
     private void ImportTextureEvent()
     {
@@ -208,7 +216,6 @@ class UIController : MonoBehaviour
     /// <param name="ImportedObject"></param>
     public void GenerateBoxcolliderOnMesh(GameObject ImportedObject,MeshFilter filter)
     {
-       
         if (ImportedObject != null)
         {
             BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
@@ -218,7 +225,7 @@ class UIController : MonoBehaviour
             Vector3 center = new Vector3();
 
             //used if we need the childeren to calculate the colliders
-           List<Vector3> allmin = new List<Vector3>();
+            List<Vector3> allmin = new List<Vector3>();
             List<Vector3> allmax = new List<Vector3>();
 
             if (filter.mesh.vertices.Length > 0) //use root to calculate boxcolider
@@ -272,11 +279,9 @@ class UIController : MonoBehaviour
             {
                 max = Vector3.one;
             }
-
             Vector3 size = max;//Vector3.Max(min, max);
             size.x = size.z;
             Mycollider.size = size; //X value seems to be 0
-
             Mycollider.center = center;
             Debug.Log("center " + center);
         }

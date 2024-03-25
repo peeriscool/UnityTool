@@ -65,16 +65,20 @@ public class GameObjectInScene
             Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh);
 
         }
-        public GameObjectInScene(string name, Vector3 scale, Vector3 position, Quaternion rotation,PrimitiveType type)
+        //ToDO: Make overload that sets childerenMeshes of imported objects
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="filter"></param>
+        public GameObjectInScene(GameObject obj,MeshFilter filter)
         {
-            GameObject obj = GameObject.CreatePrimitive(type);
             reference = obj;
-            Name = name;
-            Scale = scale;
-            Position = position;
-            Rotation = rotation;
-            Mymesh = new MeshSaveData(obj.GetComponent<MeshFilter>().mesh);
-
+            Name = obj.name;
+            Scale = obj.transform.localScale;
+            Position = obj.transform.position;
+            Rotation = obj.transform.rotation;
+            Mymesh = new MeshSaveData(filter.mesh);
         }
         public GameObjectInScene(GameObject obj)
         {

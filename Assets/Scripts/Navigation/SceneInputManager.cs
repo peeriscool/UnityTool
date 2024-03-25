@@ -60,9 +60,10 @@ class SceneInputManager
     //esc to toggle ui
     private void Menucontrolls_performed(InputAction.CallbackContext context)
     {
-        if (context.action.activeControl == Keyboard.current.escapeKey)
+        if (context.action.activeControl == Keyboard.current.escapeKey && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "StartMenu")
         {
             UIInputManager.toggleUi();
+           
         }
         //hold functions
         //if (context.action.activeControl == Keyboard.current.enterKey)

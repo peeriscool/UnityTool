@@ -14,6 +14,7 @@ using UnityEngine;
 public class SelectionManager : MonoBehaviour
 {
     bool Selected = false;
+    bool place = false;
     public static SelectionManager instance;
     public GameObject Current; //object that need commands
     public Stack<GameObject> ObjSelection = new Stack<GameObject>();
@@ -41,6 +42,12 @@ public class SelectionManager : MonoBehaviour
                     if (!Selected && Current == null) //whe have nothing selected
                     {
                         Raycaster();
+                        place = false;
+                    }
+                    if(Selected) //second mouse input
+                    {
+                        //place object
+                        place = true;
                     }
                 }
                 break;
@@ -64,7 +71,7 @@ public class SelectionManager : MonoBehaviour
                       //  if (Physics.Raycast(Zray, out RaycastHit hitdata))
                       //  {
                             Debug.DrawRay(Zray.origin, Zray.direction, Color.green, 5.0f, true);
-                            if (Current)
+                            if (Current && !place)
                             {
                                Vector3 hitPoint = Zray.GetPoint(Vector3.Distance(Camera.main.transform.position, Current.transform.position));
                                 hitPoint.y = 0;
@@ -79,6 +86,7 @@ public class SelectionManager : MonoBehaviour
             case state.Right: //gets called when clicked
                 {
                     //deselect object
+                    if(Current) JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
                     Current = null;
                     Selected = false;
                     materialcheck();
@@ -86,7 +94,6 @@ public class SelectionManager : MonoBehaviour
                     UIController.SetScaleParameters();
                     UIController.UpdateUIParameters();
                     UIController.SetPallete(false);
-                    JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
 
                 }
                 break;

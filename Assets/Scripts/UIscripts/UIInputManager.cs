@@ -16,7 +16,7 @@ public class UIInputManager
     Scene MenuScene; //should be moved to different class
     string ProjectName = "Empty";
     VisualElement root = new VisualElement();
-
+    VisualElement controlmenu;
     public UIInputManager(UIDocument Ui)
     {
         MenuScene = SceneManager.GetActiveScene();
@@ -33,14 +33,20 @@ public class UIInputManager
         Button Newbut = root.Q<Button>("New");
         Button Loadbut = root.Q<Button>("Load");
         Button Exitbut = root.Q<Button>("Exit");
-        Button Controls = root.Q<Button>("Controls");
+        Button Controls = root.Q<Button>("Control");
+        controlmenu = root.Q<VisualElement>("ControlsMenu");
+        controlmenu.visible = false;
         Newbut.clicked += () => Startproject();
         Loadbut.clicked += () => openProjectFile();
         Exitbut.clicked += () => quit();
+        Controls.clicked += () => controltoggle();
         //TODO Controls open and hide visual element ontop of menu
     }
 
-    
+    void controltoggle()
+    {
+        controlmenu.visible =! controlmenu.visible;
+    }
     void Menuactive()
     {
         if (Menu.rootVisualElement.visible)

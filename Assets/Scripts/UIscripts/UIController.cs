@@ -170,7 +170,7 @@ class UIController : MonoBehaviour
 
         //lambda expresion Anonimus function
         //https://learn.microsoft.com/nl-nl/dotnet/csharp/language-reference/operators/lambda-expressions
-        new FileBrowser().OpenFileBrowser(bp, path =>
+        new FileBrowser().OpenFileBrowser(bp, path  =>
         {
             Debug.Log("Loading" + bp + " Json project from" + path);
             ImportedObject = ObjModel.Load(path);
@@ -322,7 +322,8 @@ class UIController : MonoBehaviour
         bp.filter = "obj files (*.obj)|*.obj|All Files (*.*)|*.*";
         bp.filterIndex = 0;
 
-        new FileBrowser().OpenFileBrowser(bp, path =>
+        
+        new FileBrowser().SaveFileBrowser(bp, "MyLevelExport",bp.filter,path =>
         {
             //   Load Binary or Json format of project
             Debug.Log(path);

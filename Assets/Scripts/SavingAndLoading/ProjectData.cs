@@ -42,7 +42,7 @@ public class ProjectData
         }
         return null;
     }
-    public void SetDataFromRefrence(string  objname, Vector3 position )
+    public void SetDataFromRefrence(string objname, Vector3 position )
     {
         for (int i = 0; i < SceneObjects.Count; i++)
         {

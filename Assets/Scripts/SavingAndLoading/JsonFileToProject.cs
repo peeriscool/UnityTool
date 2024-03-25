@@ -22,9 +22,11 @@ static class JsonFileToProject
    
     public static void AddObject(GameObjectInScene obj)
     {
-        if(ProjectFile.SceneObjects.Contains(obj))
+        
+        if (ProjectFile.GetItemFromList(obj))
         {
-            obj.Name = obj.Name +"_"+ ProjectFile.SceneObjects.Count; //should add an increment to the name but adding a arbitrary value instead!   
+            obj.Name = obj.Name + "_" + ProjectFile.SceneObjects.Count; //should add an increment to the name but adding a arbitrary value instead!   
+            obj.setobjectname(obj.Name);
             Debug.Log("adding: " + obj.Name);
             ProjectFile.SceneObjects.Add(obj);
         }
@@ -37,7 +39,7 @@ static class JsonFileToProject
     public static void CreateObjects()
     {
         for (int i = 0; i < ProjectFile.SceneObjects.Count; i++)
-        {
+        {   
             ProjectData.AddobjList(ProjectFile.SceneObjects[i].make());
            /// SerializedObjects.Add(ProjectFile.SceneObjects[i].make());
         }
@@ -71,6 +73,10 @@ public class GameObjectInScene
             Rotation = rotation;
             Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh);
 
+        }
+    public void setobjectname(string _name)
+        {
+        reference.name = _name;
         }
         //ToDO: Make overload that sets childerenMeshes of imported objects
         /// <summary>

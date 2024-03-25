@@ -46,8 +46,9 @@ public class SelectionManager : MonoBehaviour
                     }
                     if(Selected) //second mouse input
                     {
-                        //place object
                         place = true;
+                        //save position
+                        if (Current) JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
                     }
                 }
                 break;
@@ -68,17 +69,13 @@ public class SelectionManager : MonoBehaviour
                     {
                         UIController.SetScaleParameters();
                         Ray Zray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                      //  if (Physics.Raycast(Zray, out RaycastHit hitdata))
-                      //  {
                             Debug.DrawRay(Zray.origin, Zray.direction, Color.green, 5.0f, true);
                             if (Current && !place)
                             {
-                               Vector3 hitPoint = Zray.GetPoint(Vector3.Distance(Camera.main.transform.position, Current.transform.position));
+                               Vector3 hitPoint = Zray.GetPoint(Vector3.Distance(Camera.main.transform.position, Current.transform.position)); //sets object to mouse raycast position
                                 hitPoint.y = 0;
                                 Current.transform.position = ExtensionMethods.Round(hitPoint,0) + m_offset;
                             }
-                      //  }
-                  
                     }
                    
                     break;

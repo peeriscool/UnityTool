@@ -12,8 +12,6 @@ static class JsonFileToProject
     public static void LoadData(ProjectData _data)
     {
         ProjectFile = _data;
-       // Program.instance.UImanager.StartProjectFromJson(ProjectFile.ProjectName); //create scene where we can add the content to handle some ui elements
-       
         for (int i = 0; i < ProjectFile.SceneObjects.Count; i++) //load data from projectfile
         {
             Debug.Log("adding:objects");
@@ -24,8 +22,17 @@ static class JsonFileToProject
    
     public static void AddObject(GameObjectInScene obj)
     {
-        Debug.Log("adding: " + obj.Name);
-        ProjectFile.SceneObjects.Add(obj);
+        if(ProjectFile.SceneObjects.Contains(obj))
+        {
+            obj.Name = obj.Name +"_"+ ProjectFile.SceneObjects.Count; //should add an increment to the name but adding a arbitrary value instead!   
+            Debug.Log("adding: " + obj.Name);
+            ProjectFile.SceneObjects.Add(obj);
+        }
+        else
+        {
+            Debug.Log("adding: " + obj.Name);
+            ProjectFile.SceneObjects.Add(obj);
+        }
     }
     public static void CreateObjects()
     {

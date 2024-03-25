@@ -12,11 +12,12 @@ public class UIInputManager
 {
     private static UIInputManager Instance;
     public UIDocument Menu;
-    Scene ProjectScene; //should be moved to different class
-    Scene MenuScene; //should be moved to different class
+    Scene ProjectScene; //should be moved to Project data
+    Scene MenuScene; //should be moved to Project data
     string ProjectName = "Empty";
     VisualElement root = new VisualElement();
     VisualElement controlmenu;
+
     public UIInputManager(UIDocument Ui)
     {
         MenuScene = SceneManager.GetActiveScene();
@@ -34,8 +35,10 @@ public class UIInputManager
         Button Loadbut = root.Q<Button>("Load");
         Button Exitbut = root.Q<Button>("Exit");
         Button Controls = root.Q<Button>("Control");
+
         controlmenu = root.Q<VisualElement>("ControlsMenu");
         controlmenu.visible = false;
+
         Newbut.clicked += () => Startproject();
         Loadbut.clicked += () => openProjectFile();
         Exitbut.clicked += () => quit();
@@ -53,6 +56,7 @@ public class UIInputManager
         {
             SceneManager.SetActiveScene(MenuScene);
             Debug.Log("Current Scene:" + MenuScene.name);
+            UnityEngine.Cursor.visible = true;
         }
         else if (ProjectScene != null)
         {
@@ -62,7 +66,7 @@ public class UIInputManager
     }
     void openProjectFile() //gets called by the load buttonclick
     {
-        if(ProjectScene.name == "empty") //we still have an unused scen with possably use
+        if(ProjectScene.name == "empty") //we still have an unused scene with possible use
         {
             SceneManager.UnloadSceneAsync(ProjectScene);
         }
@@ -74,17 +78,20 @@ public class UIInputManager
         new FileBrowser().OpenFileBrowser(bp, path =>
          {
              Debug.Log("Loading"+ bp +" Json project from" + path);
-             //json.load iets
              ProjectData MyFile = JSONSerializer.Load<ProjectData>(path); //contains file name and extention
              StartProjectFromJson(MyFile.ProjectName);
              JsonFileToProject.LoadData(MyFile); //set project data instance
-
          });
     }
     public void StartProjectFromJson(string _ProjectName)
     {
         ProjectName = _ProjectName;
         //runs only when loading Debug.Log("");
+        if(SceneManager.GetSceneByName("Empty").isLoaded)
+        {
+            //we probly dont want to have an extra empty scene when we load a json file
+            SceneManager.UnloadSceneAsync("Empty"); 
+        }
         Startproject();
     }
     void Startproject()
@@ -94,13 +101,21 @@ public class UIInputManager
         {
           
             Debug.Log("New Empty_File, Fresh ProjectData");
-            ProjectScene = SceneManager.CreateScene(ProjectName); //should use a file version number
-            SceneManager.SetActiveScene(ProjectScene);
-            JsonFileToProject.ProjectFile = new ProjectData();
-            JsonFileToProject.ProjectFile.ProjectName = ProjectName;
-            JsonFileToProject.ProjectFile.Version = 0.1f;
-            JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
-            PopulateScene();
+            if(!SceneManager.GetSceneByName("Empty").isLoaded)
+            {
+                ProjectScene = SceneManager.CreateScene(ProjectName); //should use a version number
+                SceneManager.SetActiveScene(ProjectScene);
+                JsonFileToProject.ProjectFile = new ProjectData();
+                ///  JsonFileToProject.ProjectFile.ProjectName = ProjectName;
+                JsonFileToProject.ProjectFile.Version = Mathf.Round(0.1f);
+                JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
+                PopulateScene();
+            }
+            else
+            {
+                //Toggle Back to Menu
+                Menu.rootVisualElement.visible = false; 
+            }
         }
         else //we already should have the data from Json
         {
@@ -117,7 +132,6 @@ public class UIInputManager
                     ProjectName = "Empty";
                     JsonFileToProject.ProjectFile = new ProjectData();
                 }
-
             }
             if(ProjectName != null)
             {
@@ -131,7 +145,7 @@ public class UIInputManager
         //make project active scene
      
         Program.instance.cameramovement.enabled = true;  //Not a fan of Doing this here but ok
-        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.visible = UnityEngine.Cursor.visible = false;
 	    // Debug.Log(Program.instance.cameramovement.isActiveAndEnabled);
     }
     void CreateManager()
@@ -184,11 +198,11 @@ public class UIInputManager
 
     }
 
-    public static void toggleUi()
-    { Instance.toggle(); Instance.Menuactive(); }
+    public static bool toggleUi()
+    { return Instance.toggle(); Instance.Menuactive(); }
 
-    void toggle()
+    bool toggle()
     {
-        Menu.rootVisualElement.visible = !Menu.rootVisualElement.visible;
+      return  Menu.rootVisualElement.visible = !Menu.rootVisualElement.visible;
     }
 }

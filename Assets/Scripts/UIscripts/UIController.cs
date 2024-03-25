@@ -7,18 +7,24 @@ using Dummiesman;
 using System.Collections;
 using UnityEngine.Networking;
 using System.IO;
-//loads a UIDocument to the scene
+/// <summary>
+/// Curent functionality:
+/// loads a UIDocument to the scene
+/// Populate UI with object buttons
+/// Handle functions from the panel UI
+/// </summary>
 class UIController : MonoBehaviour
     {
-  static IntegerField transformX;
-  static IntegerField transformY;
-  static  IntegerField transformZ;
+    static IntegerField transformX;
+    static IntegerField transformY;
+    static  IntegerField transformZ;
     static IntegerField Scale;
     static  Vector4Field Rotation;
-  static Label transformlabel;
+    static Label transformlabel;
     static Foldout foldoutmenu;
-  static Foldout transformation;
+    static Foldout transformation;
     UIDocument Mydocument;
+
     public void initialize()
     {
         Mydocument = this.gameObject.AddComponent<UIDocument>();
@@ -41,9 +47,7 @@ class UIController : MonoBehaviour
     {
         VisualElement root = GetComponent<UIDocument>().rootVisualElement;
         //TODOHistory
-        //COntextMenu
-        //get contextMenu
-        //load icons from resources, assign as button value
+        
         foldoutmenu = root.Q<Foldout>("ContextMenu");
         for (int i = 1; i < 7; i++)
         {
@@ -53,12 +57,12 @@ class UIController : MonoBehaviour
             spawn.style.width = 100;
             spawn.style.height = 100;
             Sprite image = Resources.Load<Sprite>("Icons/"+ name);
-         ///   spawn.text = name;  
+            // spawn.text = name;  
             spawn.style.backgroundImage = new StyleBackground(image);
             foldoutmenu.Add(spawn);
         }
         ///https://forum.unity.com/threads/subscribing-a-method-with-parameter-to-an-action.1054676/
-        for (int i = 1; i < 7; i++) //getcontextmenubuttons assign click function
+        for (int i = 1; i < 7; i++) //get context menu buttons assign click function
         {
             string name = "Button" + i.ToString();
             root.Q<Button>(name).clicked +=()  => SpawnObject(name);
@@ -97,11 +101,10 @@ class UIController : MonoBehaviour
         Rotation.value = new Vector4();
         Rotation.style.fontSize = 10;
         
-    
         transformation = root.Q<Foldout>("Translation");
         transformation.SetEnabled(false);
         transformation.value = false;   
-      //  transformation.Add(Scale);
+        //  transformation.Add(Scale);
         transformation.Add(transformlabel);
         transformation.Add(transformX);
         transformation.Add(transformY);
@@ -115,7 +118,6 @@ class UIController : MonoBehaviour
         Button Import = root.Q<Button>("ImportBut");
         Button ImportTexture = root.Q<Button>("ImageBut");
         ImportTexture.SetEnabled(false);
-
 
             //add functionality to UI
         Exportbutton.clicked += ExportEvent;

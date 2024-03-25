@@ -34,6 +34,7 @@ public class Program : MonoBehaviour
     }
     private void FixedUpdate()
     {
+    
       if(InputManager.active == SceneInputManager.Modifier.Ctrl) //toggle Camera script, Should be done In SceneInputmanager!
         {
             //Toggle CameraMovement Script

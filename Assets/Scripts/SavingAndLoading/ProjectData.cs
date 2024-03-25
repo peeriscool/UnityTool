@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
+/// <summary>
+/// Actual data that is being writen to the JsonFIle
+/// </summary>
 [System.Serializable]
 public class ProjectData
 {
@@ -39,15 +41,6 @@ public class ProjectData
             }
         }
         return null;
-	    //for (int i = 0; i < SerializedObjects.Count; i++)
-     //   {
-		   // Debug.Log(i.ToString() + "out of : " + SerializedObjects.Count);
-     //       if(SerializedObjects[i].name == refrence.Name)
-     //       {
-     //           return SerializedObjects[i];
-     //       }
-     //   }
-     //   return null;
     }
     public void SetDataFromRefrence(string  objname, Vector3 position )
     {
@@ -89,17 +82,3 @@ public class ProjectData
         }
     }
 }
-
-
-//if(SerializedObjects != null)
-//{
-//    SerializedObjects.Add(_Obj);
-//}
-//else
-//{
-//    SerializedObjects = new List<GameObject>();
-//    SerializedObjects.Add(_Obj);
-//    GameObjectInScene obj = new GameObjectInScene(_Obj);
-
-//    SceneObjects.Add(obj);
-//}

@@ -122,9 +122,10 @@ public class GameObjectInScene
                 MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
                 renderer.material = new Material(Shader.Find("Standard (Specular setup)"));
              }
-            if(GameObject.Find("commandmanager"))
+            if(GameObject.Find("commandmanager")) //yikes
             {
-                GameObject.Find("commandmanager").GetComponent<UIController>().GenerateBoxcolliderOnMesh(myobj, myobj.AddComponent<MeshFilter>());
+            GameObject.Find("commandmanager").GetComponent<UIController>().AddMeshCollider(myobj);
+              //  GameObject.Find("commandmanager").GetComponent<UIController>().GenerateBoxcolliderOnMesh(myobj, myobj.AddComponent<MeshFilter>());
 
             }
             else

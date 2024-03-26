@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="26/03/2024 diagram">
+    <Position X="2.832" Y="3.74" Height="0.75" Width="1.7" />
+  </Comment>
+  <Class Name="@Actions" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="48.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACABAAgSAAABAAAAAACBABAAAAAGAEABAgABBQAAE=</HashCode>
+      <FileName>Assets\Actions.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="OBJExporter" Collapsed="true">
+    <Position X="48.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IQIEQAAAAAIABAAASAAABIBAgAAACiIAgIAEgEAAAAA=</HashCode>
+      <FileName>Assets\OBJExport\OBJExporter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ObjExporterStandalone">
+    <Position X="2.75" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAAEQAAAAAIABAAASAAABIBAAAAACiIAAIAEgEAAAAA=</HashCode>
+      <FileName>Assets\OBJExport\ObjExporterStandalone.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MTLLoader" Collapsed="true">
+    <Position X="48.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAwAgAAAAAAAAAAgABAACABAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\MTLLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CommandHandler" Collapsed="true">
+    <Position X="13.25" Y="6.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIIAAAAAAAAEAAAAAAAAAAAAAABAIAAACAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command\CommandHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ICommands">
+    <Position X="16.25" Y="8.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Class Name="ICommands.IMove" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Command\ICommands.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command\ICommands.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MoveableBehaviour" Collapsed="true">
+    <Position X="13.25" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Assets\Scripts\Command\MoveableBehaviour.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ExtensionMethods" Collapsed="true">
+    <Position X="45.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAA=</HashCode>
+      <FileName>Assets\Scripts\ExtentionMethods.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DragManipulator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="43.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACCAACAACAAQAAEAIACAAYCASAAhJAAQAAAQAAAYAAA=</HashCode>
+      <FileName>Assets\Scripts\FutureFeatures\DragManipulater.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="DropEvent" Collapsed="true">
+    <Position X="48.25" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAIACAAAEAAA=</HashCode>
+      <FileName>Assets\Scripts\FutureFeatures\DragManipulater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FlyCamera">
+    <Position X="11.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAQAAgAAAACAAAAAAAAABAAAgAAAAgAAAAIAA=</HashCode>
+      <FileName>Assets\Scripts\Navigation\FlyCamera.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneInputManager">
+    <Position X="11.5" Y="8" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="SceneInputManager.Modifier" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Navigation\SceneInputManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAAAIEAAAAAAAAAAAAAgAAAICAIAEAAAA=</HashCode>
+      <FileName>Assets\Scripts\Navigation\SceneInputManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Program">
+    <Position X="8.75" Y="5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAiIAAAAAAAEAAAAAAABAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JsonFileToProject" Collapsed="true">
+    <Position X="21.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABABAQAAAAAAAAAAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\JsonFileToProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameObjectInScene" Collapsed="true">
+    <Position X="21.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAQAgIAgAAKAAAQAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\JsonFileToProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MeshSaveData" Collapsed="true">
+    <Position X="21.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAQAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\JsonFileToProject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JSONSerializer" Collapsed="true">
+    <Position X="21.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\JsonFormatManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProjectData" Collapsed="true">
+    <Position X="21.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IABACAAAAAAQAEAACAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\ProjectData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SavePrefab">
+    <Position X="2.75" Y="10" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\SavingAndLoading\SavePrefab.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SelectionManager">
+    <Position X="7" Y="5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="SelectionManager.state" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\Scripts\Selection\SelectionManager.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>IAAQAAABAiACAAAAAADEAAAAAABBYAAAAABABAAAAAI=</HashCode>
+      <FileName>Assets\Scripts\Selection\SelectionManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIController">
+    <Position X="5.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAQAAAACAAIQgAIMAgAAA8AEBAAQAAQAEJCGBAAA=</HashCode>
+      <FileName>Assets\Scripts\UIscripts\UIController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UIInputManager">
+    <Position X="8.75" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAABRAAIBUCCAAgAAEAEAAIAIAAQAAVAAAAAIA=</HashCode>
+      <FileName>Assets\Scripts\UIscripts\UIInputManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.CSG" Collapsed="true">
+    <Position X="46.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAAwAAAAAGABAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Assets\CSG\CSG.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.Model" Collapsed="true">
+    <Position X="46.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAAQAACBAAAAAAAAAAQAAAAAAARAAAAAAABAABAAAA=</HashCode>
+      <FileName>Assets\CSG\model.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.Node" Collapsed="true">
+    <Position X="46.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEEAABAAAAAAgAAGAAAAAAkAggAgAAAAAQAAABA=</HashCode>
+      <FileName>Assets\CSG\Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.Plane" Collapsed="true">
+    <Position X="46.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAEAAAAAAkAAAAAAAAAAAgABAAAAAA=</HashCode>
+      <FileName>Assets\CSG\Plane.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.Polygon" Collapsed="true">
+    <Position X="46.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAEAAAAQAgAAAAAAAABAAAA=</HashCode>
+      <FileName>Assets\CSG\Polygon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Parabox.CSG.VertexUtility" Collapsed="true">
+    <Position X="46.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAEAAAEAAAAIEAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CSG\VertexUtillity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.CharWordReader" Collapsed="true">
+    <Position X="48.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAABIQAIAAgBAAAQBAACEABAAgIAIgBAhAAQCAA=</HashCode>
+      <FileName>Assets\OBJImport\CharWordReader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.OBJLoader" Collapsed="true">
+    <Position X="48.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAgAAAEAAAAAAAAAAAABAAAAAAAAQAEMAAAAAAgAA=</HashCode>
+      <FileName>Assets\OBJImport\OBJLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.OBJLoaderHelper" Collapsed="true">
+    <Position X="42" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAFAAAIAAAAACAAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\OBJImport\OBJLoaderHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.OBJObjectBuilder" Collapsed="true">
+    <Position X="43" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAEAIAAAgAAAAAEAAAAAQACAgAgEgAhAAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\OBJObjectBuilder.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.StringExtensions" Collapsed="true">
+    <Position X="38.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>Assets\OBJImport\StringExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.BinaryExtensions" Collapsed="true">
+    <Position X="48.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BinaryExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.DDSLoader" Collapsed="true">
+    <Position X="48.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\DDSLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.ImageLoader" Collapsed="true">
+    <Position X="48.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\ImageLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.ImageLoaderHelper" Collapsed="true">
+    <Position X="48.25" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\ImageLoaderHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.ImageUtils" Collapsed="true">
+    <Position X="48.25" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\ImageUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.TGALoader" Collapsed="true">
+    <Position X="40.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\TGALoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="B83.Image.BMP.BMPImage" Collapsed="true">
+    <Position X="48.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAQAAAAAAAAAoAAAIAAgAACAAAAAQAAAAAEAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="B83.Image.BMP.BMPLoader" Collapsed="true">
+    <Position X="48.25" Y="12" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>kAAEAGAAAAAAAIIAAIAAQAAAAAIABAAAJABAAAAAAAI=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="B83.Image.BMP.BitStreamReader" Collapsed="true">
+    <Position X="48.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAgAAAgIAAAAAIAAAAAAAAAAAAAAAIAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dummiesman.Extensions.ColorExtensions" Collapsed="true">
+    <Position X="48.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\ColorExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Runtime.CompilerServices.IsExternalInit" Collapsed="true">
+    <Position X="46.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\FutureFeatures\DragManipulater.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UnityEngine.MonoBehaviour" Collapsed="true">
+    <Position X="11.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="Parabox.CSG.Vertex" Collapsed="true">
+    <Position X="46.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAIASQAAEQAAAAFIAkAAAEAAADAAQAAAkgABgA=</HashCode>
+      <FileName>Assets\CSG\Vertex.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="B83.Image.BMP.BMPFileHeader" Collapsed="true">
+    <Position X="41.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAIAAAAAAAAAEAAAAAAAAAAAAAAABA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="B83.Image.BMP.BitmapInfoHeader" Collapsed="true">
+    <Position X="38.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAEAAAgAAAQAQIAAAIAAAAAAAAAkAACAAgAAIEA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Interface Name="ICommand" Collapsed="true">
+    <Position X="13.25" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\Scripts\Command\ICommand.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="Parabox.CSG.VertexAttributes" Collapsed="true">
+    <Position X="46.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAIAAAAgBAAAAAAAAAAIAAADAIAAgAAAACA=</HashCode>
+      <FileName>Assets\CSG\VertexAttributes.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Dummiesman.SplitMode" Collapsed="true">
+    <Position X="48.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Assets\OBJImport\OBJLoader.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="B83.Image.BMP.BMPComressionMode" Collapsed="true">
+    <Position X="44.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAAAAAACAABiAACAQAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Assets\OBJImport\TextureLoader\BMPLoader.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

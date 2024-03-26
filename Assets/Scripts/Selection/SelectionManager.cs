@@ -140,6 +140,7 @@ public class SelectionManager : MonoBehaviour
                 Current = selection.gameObject;
                 UIController.PalleteObjectMenu(Current.name);
                 UIController.SetPallete(true);
+                UIController.UpdateUIParameters(); //refresh pallet ui values with object location
                 lastselected = selection;
             }
         }

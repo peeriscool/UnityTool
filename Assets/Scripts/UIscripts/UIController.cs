@@ -199,17 +199,17 @@ class UIController : MonoBehaviour
                 filter = ImportedObject.AddComponent<MeshFilter>();
             }
         }
-        
-       // BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
 
-        GenerateBoxcolliderOnMesh(ImportedObject, filter);
+        // BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
+        AddMeshCollider(ImportedObject);
+        //GenerateBoxcolliderOnMesh(ImportedObject, filter);
         JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject,filter));
         // ImportedObject.AddComponent<MoveableBehaviour>();
     } 
     private void ImportTextureEvent()
     {
-        FileBrowserUpdate util = this.gameObject.AddComponent<FileBrowserUpdate>();
-        util.OpenFileBrowser();
+       // FileBrowserUpdate util = this.gameObject.AddComponent<FileBrowserUpdate>();
+    //    util.OpenFileBrowser();
     }
     
     /// <summary>
@@ -288,6 +288,24 @@ class UIController : MonoBehaviour
             Debug.Log("center " + center);
         }
     }
+    //https://gist.github.com/danielbierwirth/4704573841072d4646f950685fb86c04
+    public void AddMeshCollider(GameObject containerModel)
+    {
+        // Add mesh collider
+        MeshFilter meshFilter = containerModel.GetComponent<MeshFilter>();
+        if (meshFilter != null)
+        {
+            MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
+            meshCollider.sharedMesh = meshFilter.sharedMesh;
+        }
+        // Add mesh collider (convex) for each mesh in child elements.
+        Component[] meshes = containerModel.GetComponentsInChildren<MeshFilter>();
+        foreach (MeshFilter mesh in meshes)
+        {
+            MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
+            meshCollider.sharedMesh = mesh.sharedMesh;
+        }
+    }
     private void SaveEvent()
     {
 
@@ -313,7 +331,8 @@ class UIController : MonoBehaviour
         exportmeshes.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
 
         string path = openProjectFile();
-        SavePrefab.ObjExportUtil(path, exportmeshes);
+        ObjExporterStandalone exportUtil = new ObjExporterStandalone();
+        exportUtil.Export(path, exportmeshes);
     }
     string openProjectFile()
     {
@@ -348,7 +367,6 @@ class UIController : MonoBehaviour
                     SelectionManager.instance.Current.transform.rotation.z,
                     SelectionManager.instance.Current.transform.rotation.w
                 );
-
          //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.position);  ///save obj data to json
          //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.rotation);
         }

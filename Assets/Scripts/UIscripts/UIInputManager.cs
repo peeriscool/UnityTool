@@ -106,7 +106,7 @@ public class UIInputManager
                 ProjectScene = SceneManager.CreateScene(ProjectName); //should use a version number
                 SceneManager.SetActiveScene(ProjectScene);
                 JsonFileToProject.ProjectFile = new ProjectData();
-                ///  JsonFileToProject.ProjectFile.ProjectName = ProjectName;
+                //  JsonFileToProject.ProjectFile.ProjectName = ProjectName;
                 JsonFileToProject.ProjectFile.Version = Mathf.Round(0.1f);
                 JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
                 PopulateScene();

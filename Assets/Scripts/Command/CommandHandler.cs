@@ -36,7 +36,6 @@ public class CommandHandler
 			_redoStack.Push(activecommand);
 			activecommand.Undo();
         }
-  
     }
 
 	/// <summary>

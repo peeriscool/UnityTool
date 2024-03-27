@@ -16,33 +16,22 @@ using UnityEngine.UIElements;
 public class Program : MonoBehaviour
 {
     public static Program instance;
-    public FlyCamera cameramovement;
+    public FlyCamera camcontroler;
     public bool enableCamera = false; //should be enabled by ui
-    public UIInputManager UImanager;
-    SceneInputManager InputManager = new SceneInputManager();
+    public UIManager UImanager;
+    InputManager InputManager = new InputManager();
     Program()
     {
         print("Loading program Setting Instance...");
         instance = this;
+      
     }
 
     private void Start()
     {
-        UImanager = new UIInputManager(GetComponent<UIDocument>()); //initialize UIInputManager
+        UImanager = new UIManager(GetComponent<UIDocument>()); //initialize UIInputManager
         InputManager.EnableControls();
-        cameramovement.enabled = false; //Disable Camera Movement when program starts
+        camcontroler.enabled = false; //Disable Camera Movement when program starts
     }
-    private void FixedUpdate()
-    {
-    
-      if(InputManager.active == SceneInputManager.Modifier.Ctrl) //toggle Camera script, Should be done In SceneInputmanager!
-        {
-            //Toggle CameraMovement Script
-            cameramovement.enabled =! cameramovement.enabled;
-            //toggle cursor
-            UnityEngine.Cursor.visible = !cameramovement.enabled;
-           // Debug.Log("Toggle Camera" + cameramovement.enabled);
-            InputManager.active = SceneInputManager.Modifier.none;
-        }
-    }
+   
 }

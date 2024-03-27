@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 498f190b01769084db318d2db1827539, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameramovement: {fileID: 488541682}
+  camcontroler: {fileID: 488541682}
   enableCamera: 0
 --- !u!114 &488541680
 MonoBehaviour:
@@ -369,3 +369,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11734a743d2791b4493a40280b98af13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Instance: {fileID: 488541682}

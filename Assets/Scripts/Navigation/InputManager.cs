@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-class SceneInputManager
+class InputManager
 {
     Actions Playeractions;
     public enum Modifier { none, Ctrl, alt, shift }
@@ -25,13 +25,9 @@ class SceneInputManager
         Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
     }
 
-   
-
     //change State of the mouse to Pickup,hold or Release
     private void Mouse_context(InputAction.CallbackContext context)
     {
-      
-     
        if(context.performed) //pressing down
         {
             if (context.action.activeControl == Mouse.current.leftButton && active == Modifier.shift) //TODO multiselect
@@ -62,30 +58,13 @@ class SceneInputManager
     {
         if (context.action.activeControl == Keyboard.current.escapeKey && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "StartMenu")
         {
-            UIInputManager.toggleUi();
-           
-        }
-        //hold functions
-        //if (context.action.activeControl == Keyboard.current.enterKey)
-        //{
-        //    //DO confirm
-        //}
-
-        //if (context.action.activeControl == Keyboard.current.leftShiftKey)
-        //{
-        //    //modifier
-        //}
-
-        //if (context.action.activeControl == Keyboard.current.leftCtrlKey)
-        //{
-        //    //modifier
-        //}
+            UIManager.toggleUi();
+        }      
     }
 
     private void Menucontrolls_canceled(InputAction.CallbackContext context)
     {
-    //    Debug.Log("null");
-        active = 0;
+        active = Modifier.none;
     }
 
     private void Menucontrolls_started(InputAction.CallbackContext context)
@@ -93,6 +72,8 @@ class SceneInputManager
         if (context.action.activeControl == Keyboard.current.leftCtrlKey)
         {
             active = Modifier.Ctrl;
+            ToggleCamera();
+
         }
         else if (context.action.activeControl == Keyboard.current.leftAltKey)
         {
@@ -129,13 +110,13 @@ class SceneInputManager
         if (context.action.activeControl == Keyboard.current.zKey && active == Modifier.Ctrl)
         {
             Debug.Log(context.action.activeControl.name);
-            CommandHandler.UndoComand();
+            CommandInvoker.UndoComand();
         }
         //If ctrl Redo
         if (context.action.activeControl == Keyboard.current.yKey && active == Modifier.Ctrl)
         {
             Debug.Log(context.action.activeControl.name);
-            CommandHandler.RedoCommand();
+            CommandInvoker.RedoCommand();
         }
         //If ctrl Paste
         if (context.action.activeControl == Keyboard.current.vKey && active == Modifier.Ctrl)
@@ -145,5 +126,19 @@ class SceneInputManager
         }
 
     }
+
+    public void ToggleCamera()
+    {
+        if (active == Modifier.Ctrl) //toggle Camera script, Should be done In Inputmanager!
+        {
+            //Toggle CameraMovement Script
+            FlyCamera.Instance.enabled = !FlyCamera.Instance.enabled;
+            //toggle cursor
+            UnityEngine.Cursor.visible = !FlyCamera.Instance.enabled;
+             Debug.Log("Toggle Camera" + FlyCamera.Instance.enabled);
+           // active = Modifier.none;
+        }
+    }
 }
+
   

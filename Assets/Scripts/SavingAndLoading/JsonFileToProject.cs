@@ -17,7 +17,6 @@ static class JsonFileToProject
             Debug.Log("adding:objects");
             ProjectFile.SceneObjects[i].make();
         }
-
     }
    
     public static void AddObject(GameObjectInScene obj)
@@ -47,8 +46,6 @@ static class JsonFileToProject
 
 }
 
-
-
 //https://forum.unity.com/threads/save-gameobject-information-list-in-json-file.446615/
 [System.Serializable]
 public class GameObjectInScene
@@ -74,24 +71,23 @@ public class GameObjectInScene
             Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh);
 
         }
-    public void setobjectname(string _name)
+        public void setobjectname(string _name)
         {
-        reference.name = _name;
+            reference.name = _name;
         }
-        //ToDO: Make overload that sets childerenMeshes of imported objects
         /// <summary>
-        /// 
+        /// ToDO: Make overload that sets childerenMeshes of imported objects
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="filter"></param>
         public GameObjectInScene(GameObject obj,MeshFilter filter)
         {
-            reference = obj;
-            Name = obj.name;
-            Scale = obj.transform.localScale;
-            Position = obj.transform.position;
-            Rotation = obj.transform.rotation;
-            Mymesh = new MeshSaveData(filter.mesh);
+                reference = obj;
+                Name = obj.name;
+                Scale = obj.transform.localScale;
+                Position = obj.transform.position;
+                Rotation = obj.transform.rotation;
+                Mymesh = new MeshSaveData(filter.mesh);
         }
         public GameObjectInScene(GameObject obj)
         {
@@ -118,19 +114,13 @@ public class GameObjectInScene
             myobj.transform.position = Position;
             myobj.transform.rotation = Rotation;
             if(!myobj.GetComponent<MeshRenderer>())
-             {
-                MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
-                renderer.material = new Material(Shader.Find("Standard (Specular setup)"));
-             }
-            if(GameObject.Find("commandmanager")) //yikes
             {
-            GameObject.Find("commandmanager").GetComponent<UIController>().AddMeshCollider(myobj);
-              //  GameObject.Find("commandmanager").GetComponent<UIController>().GenerateBoxcolliderOnMesh(myobj, myobj.AddComponent<MeshFilter>());
-
+               MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
+               renderer.material = new Material(Shader.Find("Standard (Specular setup)")); //we should reload the material that was orginaly on the object
             }
             else
             {
-                myobj.AddComponent<MeshFilter>();
+                ExtensionMethods.AddMeshCollider(myobj);
             }
             Mesh mesh = myobj.GetComponent<MeshFilter>().mesh;
             mesh.vertices = Mymesh.vertices;
@@ -149,14 +139,11 @@ public class MeshSaveData
     public Vector3[] vertices;  
     public Vector3[] normals;
 
-    // add whatever properties of the mesh you need...
-
     public MeshSaveData(Mesh mesh)
     {
         this.vertices = mesh.vertices;
         this.triangles = mesh.triangles;
         this.normals = mesh.normals;
-        // further properties...
     }
 }
 

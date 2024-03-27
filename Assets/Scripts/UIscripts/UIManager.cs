@@ -5,20 +5,20 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using AnotherFileBrowser.Windows;
 /// <summary>
-/// TODO Rename To MENU InputManager
+/// TODO remove code that is not UI related Like Mouse cursor toggles and scene loading
 /// 
 /// </summary>
-public class UIInputManager
+public class UIManager
 {
-    private static UIInputManager Instance;
+    private static UIManager Instance;
     public UIDocument Menu;
     Scene ProjectScene; //should be moved to Project data
     Scene MenuScene; //should be moved to Project data
     string ProjectName = "Empty";
-    VisualElement root = new VisualElement();
-    VisualElement controlmenu;
+    VisualElement root = new VisualElement(); //root of menu
+    VisualElement controlmenu; //displays controls to user
 
-    public UIInputManager(UIDocument Ui)
+    public UIManager(UIDocument Ui)
     {
         MenuScene = SceneManager.GetActiveScene();
         Menu = Ui;
@@ -96,24 +96,22 @@ public class UIInputManager
     }
     void Startproject()
     {
-        
         if(ProjectName == "Empty") //If its a new file populate with serializable objects
         {
-          
-            Debug.Log("New Empty_File, Fresh ProjectData");
             if(!SceneManager.GetSceneByName("Empty").isLoaded)
             {
                 ProjectScene = SceneManager.CreateScene(ProjectName); //should use a version number
                 SceneManager.SetActiveScene(ProjectScene);
                 JsonFileToProject.ProjectFile = new ProjectData();
-                //  JsonFileToProject.ProjectFile.ProjectName = ProjectName;
                 JsonFileToProject.ProjectFile.Version = Mathf.Round(0.1f);
                 JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
-                PopulateScene();
+	            
+                ExtensionMethods.MakeStartCube(ProjectScene);
+                ExtensionMethods.CreateManager(ProjectScene);
+                ExtensionMethods.makebaseplane(ProjectScene);
             }
-            else
+            else  //Toggle Back to Menu
             {
-                //Toggle Back to Menu
                 Menu.rootVisualElement.visible = false; 
             }
         }
@@ -138,50 +136,15 @@ public class UIInputManager
                ProjectScene = SceneManager.CreateScene(ProjectName); //should use a file version number
                SceneManager.SetActiveScene(ProjectScene);
             }
-            CreateManager();
-            makebaseplane();
+            ExtensionMethods.CreateManager(ProjectScene);
+            ExtensionMethods.makebaseplane(ProjectScene);
         }
+
         toggle();
-        //make project active scene
-     
-        Program.instance.cameramovement.enabled = true;  //Not a fan of Doing this here but ok
-        UnityEngine.Cursor.visible = UnityEngine.Cursor.visible = false;
-	    // Debug.Log(Program.instance.cameramovement.isActiveAndEnabled);
+        FlyCamera.Instance.enabled = true;
+        UnityEngine.Cursor.visible = false;
     }
-    void CreateManager()
-    {
-        GameObject commandmanager = new GameObject();
-        commandmanager.name = "commandmanager";
-        UIController controller = commandmanager.AddComponent<UIController>();
-        controller.initialize();
-        SceneManager.MoveGameObjectToScene(commandmanager, ProjectScene);
-    }
-    void PopulateScene() //runs when creating a new projectfile
-    {
-        //creating default objects in scene
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        GameObjectInScene startcube = new GameObjectInScene(cube);
-        //GameObjectInScene startcube = new GameObjectInScene("StartCube",Vector3.one,Vector3.zero,Quaternion.identity,PrimitiveType.Cube);
-        JsonFileToProject.AddObject(startcube); //make it saveable
-        //GameObject a = JsonFileToProject.ProjectFile.SceneObjects;
-        SceneManager.MoveGameObjectToScene(JsonFileToProject.ProjectFile.GetItemFromList(startcube), ProjectScene);
-        
-          ///  SceneManager.MoveGameObjectToScene(GameObject.CreatePrimitive(PrimitiveType.Cube), ProjectScene)) ;
-        CreateManager();
-        makebaseplane();
-
-
-    }
-    void makebaseplane ()
-    {
-        //make sure plane does not get exported to obj
-        GameObject baseplane = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        baseplane.transform.localScale *= 4;
-        baseplane.name = "BasePlane";
-        baseplane.GetComponent<Collider>().enabled = false; //make ground planen non interactible
-        baseplane.GetComponent<Renderer>().material = Resources.Load<Material>("GridMaterial");
-        SceneManager.MoveGameObjectToScene(baseplane, ProjectScene);
-    }
+  
     void quit()
     {
         //if editor 
@@ -192,14 +155,8 @@ public class UIInputManager
         Application.Quit();
     }
 
-    private void OnApplicationQuit()
-    {
-        Debug.Log("Warning nothing is saved yet!");
-
-    }
-
-    public static bool toggleUi()
-    { return Instance.toggle(); Instance.Menuactive(); }
+    /// <returns>Menu status Enable/Disable</returns>
+    public static bool toggleUi() { return Instance.toggle(); Instance.Menuactive(); }
 
     bool toggle()
     {

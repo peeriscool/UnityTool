@@ -130,7 +130,9 @@ class UIController : MonoBehaviour
         transformZ.RegisterValueChangedCallback(x => SetSelectedParameters());
         Rotation.RegisterValueChangedCallback(x => SetSelectedParameters());
     }
-    private static void SpawnObject(string name)
+  
+    //----------------------------------------------------------------------------Has  nothing to do with UI therefor it should be moved to different class-------------------------------------------------------------------------------------------\\
+    private static void SpawnObject(string name) ////should be replaced by create prefab command should be made more dynamic, without direct object definition
     {
         if(name == "Button1") { GameObject Plane = GameObject.CreatePrimitive(PrimitiveType.Plane);
             GameObjectInScene obj = new GameObjectInScene(Plane);
@@ -156,10 +158,10 @@ class UIController : MonoBehaviour
             GameObjectInScene obj = new GameObjectInScene(Sphere);
             JsonFileToProject.AddObject(obj);
         }
-      
         Debug.Log(name);
     }
-    private void ImportEvent()
+
+    private void ImportEvent() //functionality to import new obj 
     {
         GameObject ImportedObject = new GameObject();
         //Action<string> action = (pat);
@@ -182,10 +184,6 @@ class UIController : MonoBehaviour
         {
             filter = _filter;
         }
-        //else if(ImportedObject.GetComponentInChildren<MeshFilter>())//see if childeren of mesh have filter
-        //{
-        //    filter = ImportedObject.GetComponentInChildren<MeshFilter>();
-        //}
         else //make empty filter
         {
             //try  to get from child
@@ -199,138 +197,37 @@ class UIController : MonoBehaviour
                 filter = ImportedObject.AddComponent<MeshFilter>();
             }
         }
-
-        // BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
-        AddMeshCollider(ImportedObject);
+        ExtensionMethods.AddMeshCollider(ImportedObject);
         //GenerateBoxcolliderOnMesh(ImportedObject, filter);
         JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject,filter));
-        // ImportedObject.AddComponent<MoveableBehaviour>();
     } 
     private void ImportTextureEvent()
     {
        // FileBrowserUpdate util = this.gameObject.AddComponent<FileBrowserUpdate>();
-    //    util.OpenFileBrowser();
+       // util.OpenFileBrowser();
     }
     
-    /// <summary>
-    /// NOT OPTIMIZED!!! Fixes the colliders when pivot point is not on mesh location
-    /// </summary>
-    /// <param name="ImportedObject"></param>
-    public void GenerateBoxcolliderOnMesh(GameObject ImportedObject,MeshFilter filter)
-    {
-        if (ImportedObject != null)
-        {
-            BoxCollider Mycollider = ImportedObject.AddComponent<BoxCollider>(); //make it so we can select it with the selectionmanager
-            int Submeshcount = ImportedObject.transform.childCount;
-            Vector3 min = Vector3.zero;
-            Vector3 max = Vector3.zero;
-            Vector3 center = new Vector3();
-
-            //used if we need the childeren to calculate the colliders
-            List<Vector3> allmin = new List<Vector3>();
-            List<Vector3> allmax = new List<Vector3>();
-
-            if (filter.mesh.vertices.Length > 0) //use root to calculate boxcolider
-            {
-                Debug.Log("Running through" + " meshFilter for center");
-                for (int i = 0; i < filter.mesh.vertices.Length; i++)
-                {
-                    min = Vector3.Min(filter.mesh.vertices[i], min);
-                    max = Vector3.Max(filter.mesh.vertices[i], max);
-                    center += filter.mesh.vertices[i];
-                }
-                center.x = center.x / filter.mesh.vertices.Length;
-                center.y = center.y / filter.mesh.vertices.Length;
-                center.z = center.z / filter.mesh.vertices.Length;
-            }
-            else if (filter.mesh.vertices.Length == 0 && Submeshcount != 0) //root object does not have any mesh data
-            {
-                Debug.Log("Running through" + Submeshcount + " child meshes");
-                //generate collider location on childeren
-                for (int i = 0; i < Submeshcount; i++)
-                {
-                    Transform child = ImportedObject.transform.GetChild(i);
-                    Mesh childmesh = child.GetComponent<MeshFilter>().mesh;
-
-                    if (childmesh != null)
-                    {
-                        Debug.Log("Running through" + childmesh.vertices.Length + " vertices");
-                        for (int j = 0; j < childmesh.vertices.Length; j++)
-                        {
-                            //   Debug.Log(childmesh.vertices[j]);
-                            min = Vector3.Min(childmesh.vertices[j], min);
-                            max = Vector3.Max(childmesh.vertices[j], max);
-                            allmin.Add(min);
-                            allmax.Add(max);
-                            center += childmesh.vertices[j];
-                        }
-                    }
-                    for (int x = 1; x < allmax.Count; x++)
-                    {
-                        max = Vector3.Max(allmax[x], allmax[x-1]);
-                    }
-                    //   center.x = center.x / childmesh.vertices.Length;
-                    //  center.y = center.y / childmesh.vertices.Length;
-                    //   center.z = center.z / childmesh.vertices.Length;
-                    center = Vector3.zero;
-                    Debug.Log(childmesh.name + " minimal " + min + "root = " + ImportedObject.name);
-                    Debug.Log(childmesh.name + " maximum " + max + "root = " + ImportedObject.name);
-                }
-            }
-            else //meshfilter is empty
-            {
-                max = Vector3.one;
-            }
-            Vector3 size = max;//Vector3.Max(min, max);
-            size.x = size.z;
-            Mycollider.size = size; //X value seems to be 0
-            Mycollider.center = center;
-            Debug.Log("center " + center);
-        }
-    }
-    //https://gist.github.com/danielbierwirth/4704573841072d4646f950685fb86c04
-    public void AddMeshCollider(GameObject containerModel)
-    {
-        // Add mesh collider
-        MeshFilter meshFilter = containerModel.GetComponent<MeshFilter>();
-        if (meshFilter != null)
-        {
-            MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = meshFilter.sharedMesh;
-        }
-        // Add mesh collider (convex) for each mesh in child elements.
-        Component[] meshes = containerModel.GetComponentsInChildren<MeshFilter>();
-        foreach (MeshFilter mesh in meshes)
-        {
-            MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = mesh.sharedMesh;
-        }
-    }
     private void SaveEvent()
     {
-
         var bp = new BrowserProperties();
         bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*";
         bp.filterIndex = 0;
         
-
         new FileBrowser().SaveFileBrowser(bp,"ProjectFile_01",".json" , SavePath =>
          {
              JsonFileToProject.ProjectFile.ProjectName = Path.GetFileName(SavePath);
              JSONSerializer.Save(SavePath, JsonFileToProject.ProjectFile);
 
          });
-        //temp savedata
-       
     }
     private void ExportEvent()
     {
-        //  SavePrefab.Save(GameObject.CreatePrimitive(PrimitiveType.Cube));
         List<GameObject> exportmeshes = new List<GameObject>();
-        exportmeshes.Add(GameObject.CreatePrimitive(PrimitiveType.Cube));
-        exportmeshes.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
-
-        string path = openProjectFile();
+        for (int i = 0; i < JsonFileToProject.ProjectFile.SceneObjects.Count; i++)
+        {
+            if(JsonFileToProject.ProjectFile.SceneObjects[i].Getrefrence() != null) exportmeshes.Add(JsonFileToProject.ProjectFile.SceneObjects[i].Getrefrence());
+        }
+           string path = openProjectFile();
         ObjExporterStandalone exportUtil = new ObjExporterStandalone();
         exportUtil.Export(path, exportmeshes);
     }
@@ -352,49 +249,22 @@ class UIController : MonoBehaviour
         });
         return sendpath;
     }
-    public static void UpdateUIParameters()  //Sets UI Transform and rotation
-    {
-        if (SelectionManager.instance.Current)
-        {
-            transformX.value = (int)SelectionManager.instance.Current.transform.position.x;
-            transformY.value = (int)SelectionManager.instance.Current.transform.position.y;
-            transformZ.value = (int)SelectionManager.instance.Current.transform.position.z;
-            Rotation.value =
-                new Vector4
-                (
-                    SelectionManager.instance.Current.transform.rotation.x,
-                    SelectionManager.instance.Current.transform.rotation.y,
-                    SelectionManager.instance.Current.transform.rotation.z,
-                    SelectionManager.instance.Current.transform.rotation.w
-                );
-         //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.position);  ///save obj data to json
-         //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.rotation);
-        }
-       
-    }
     public static void GetScaleParameters() //Sets Current object scale
     {
-        if(SelectionManager.instance.Current)
-        {
-           SelectionManager.instance.Current.transform.localScale = new Vector3 (Scale.value, Scale.value, Scale.value);
-            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, Scale.value);
-        }
-    }
-    public static void SetScaleParameters() //Sets UI object scale
-    {
         if (SelectionManager.instance.Current)
         {
-        Scale.value = (int) SelectionManager.instance.Current.transform.localScale.x;
+            SelectionManager.instance.Current.transform.localScale = new Vector3(Scale.value, Scale.value, Scale.value);
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, Scale.value);
         }
     }
     public static void SetSelectedParameters()  //Sets Current object transform and rotation
     {
-        if(SelectionManager.instance.Current)
+        if (SelectionManager.instance.Current)
         {
             Vector3 position = new Vector3(transformX.value, transformY.value, transformZ.value);
             SelectionManager.instance.Current.transform.position = position;
             Quaternion rot = new Quaternion
-                (       
+                (
                     Rotation.value.x,
                     Rotation.value.y,
                     Rotation.value.z,
@@ -407,6 +277,34 @@ class UIController : MonoBehaviour
             JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, rot);
         }
     }
+    //------------------------------------------------------End of code that needs to be moved-----------------------------------------------------------------------------------------------------------------\\
+
+    public static void UpdateUIParameters()  //Sets UI Transform and rotation
+    {
+        if (SelectionManager.instance.Current)
+        {
+            transformX.value = (int)SelectionManager.instance.Current.transform.position.x;
+            transformY.value = (int)SelectionManager.instance.Current.transform.position.y;
+            transformZ.value = (int)SelectionManager.instance.Current.transform.position.z;
+            Rotation.value = new Vector4
+            (
+                SelectionManager.instance.Current.transform.rotation.x,
+                SelectionManager.instance.Current.transform.rotation.y,
+                SelectionManager.instance.Current.transform.rotation.z,
+                SelectionManager.instance.Current.transform.rotation.w
+            );
+             //JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.position);  ///save obj data to json
+        }
+    }
+ 
+    public static void SetScaleParameters() //Sets UI object scale
+    {
+        if (SelectionManager.instance.Current)
+        {
+        Scale.value = (int) SelectionManager.instance.Current.transform.localScale.x;
+        }
+    }
+ 
     public static void PalleteObjectMenu(string name)
     {
         transformlabel.text = name;

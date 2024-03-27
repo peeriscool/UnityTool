@@ -5,13 +5,22 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 //https://unity.com/how-to/use-command-pattern-flexible-and-extensible-game-systems
-public class CommandHandler
+// https://www.youtube.com/watch?v=attURV3JWKQ
+
+/// <summary>
+/// invoker class calls execute and undo using a stack of Icommands.
+/// stack represents all commands done during session
+/// TODO 
+/// - Should comunicate with Json so we can save histroy
+/// - Implement functionality
+/// </summary>
+public class CommandInvoker
 {
-	public static CommandHandler instance = new CommandHandler();
+	public static CommandInvoker instance = new CommandInvoker();
 	private static Stack<ICommand> _undoStack = new Stack<ICommand>();
 	private static Stack<ICommand> _redoStack = new Stack<ICommand>();
 
-    CommandHandler() 
+	CommandInvoker() 
 	{
         instance = this;
     }
@@ -20,28 +29,18 @@ public class CommandHandler
 	{
 		command.Execute();
 		_undoStack.Push(command);
-
 		// clear out the redo stack if we make a new move
 		_redoStack.Clear();
 	}
-	/// <summary>
-	/// Undo Command from command stack if not 0
-	/// </summary>
-	/// <returns>Bool</returns>
 	public static void UndoComand()
     {		
 	    if(_undoStack.Count > 0)
-        {
+        { 
 			ICommand activecommand = _undoStack.Pop();
 			_redoStack.Push(activecommand);
 			activecommand.Undo();
         }
     }
-
-	/// <summary>
-	/// Redo Command from command stack if not 0
-	/// </summary>
-	/// <returns>Bool</returns>
 	public static void RedoCommand()
 	{
 		if (_redoStack.Count > 0)

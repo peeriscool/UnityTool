@@ -11,7 +11,7 @@ using UnityEngine;
 /// - Mousescroll for height of the Hold state hitPoint (currently set  to 0)
 /// </summary>
 
-public class SelectionManager : MonoBehaviour
+public class SelectionManager 
 {
     bool Selected = false;
     bool place = false;
@@ -26,13 +26,12 @@ public class SelectionManager : MonoBehaviour
     private Vector3 m_offset;
     Vector3 hitPoint = Vector3.zero;
     Plane ground = new Plane();
-    void Start()
+    public SelectionManager()
     {
         instance = this;
-        
     }
-    
-    void FixedUpdate()
+
+    public void UpdateInput()
     {
         switch (selection)
         {
@@ -67,7 +66,7 @@ public class SelectionManager : MonoBehaviour
                 {
                     if(Selected)
                     {
-                        UIController.SetScaleParameters();
+                        //UIController.SetScaleParameters();
                         Ray Zray = Camera.main.ScreenPointToRay(Input.mousePosition);
                             Debug.DrawRay(Zray.origin, Zray.direction, Color.green, 5.0f, true);
                             if (Current && !place)
@@ -87,10 +86,10 @@ public class SelectionManager : MonoBehaviour
                     Current = null;
                     Selected = false;
                     materialcheck();
-                    UIController.PalleteObjectMenu("None");
-                    UIController.SetScaleParameters();
-                    UIController.UpdateUIParameters();
-                    UIController.SetPallete(false);
+                    //UIController.PalleteObjectMenu("None");
+                    //UIController.SetScaleParameters();
+                    //UIController.UpdateUIParameters();
+                    //UIController.SetPallete(false);
 
                 }
                 break;
@@ -138,9 +137,10 @@ public class SelectionManager : MonoBehaviour
             if(selection.gameObject)
             {
                 Current = selection.gameObject;
-                UIController.PalleteObjectMenu(Current.name);
-                UIController.SetPallete(true);
-                UIController.UpdateUIParameters(); //refresh pallet ui values with object location
+                Program.instance.Uimanager.palleteHandler.PalleteObjectMenu(Current.name);
+              Program.instance.Uimanager.palleteHandler.SetPallete(true);
+                
+                //UIController.UpdateUIParameters(); //refresh pallet ui values with object location
                 lastselected = selection;
             }
         }

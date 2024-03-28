@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-
+[Serializable]
 class InputManager
 {
     Actions Playeractions;
@@ -56,9 +56,23 @@ class InputManager
     //esc to toggle ui
     private void Menucontrolls_performed(InputAction.CallbackContext context)
     {
-        if (context.action.activeControl == Keyboard.current.escapeKey && UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "StartMenu")
+        if (context.action.activeControl == Keyboard.current.escapeKey)
         {
-            UIManager.toggleUi();
+            switch (Program.instance.Uimanager.activeUI)
+            {
+                case "StartMenu":
+                    Program.instance.Uimanager.CallPalleteHandler();
+                    break;
+                case "Pallete": Program.instance.Uimanager.StartMenuHandler();
+                    break;
+                default: ;
+                    if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name !=Program.instance.gameObject.scene.name) //check if we have a project scene to go back to, if not don't toggle UiMenu
+                    {
+                        Debug.Log("Esc cant perform ActiveUI is Startmenu go back to pallete");
+                     Program.instance.Uimanager.CallPalleteHandler();
+                    }
+                  break;
+            }
         }      
     }
 

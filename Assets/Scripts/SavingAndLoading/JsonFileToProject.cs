@@ -113,7 +113,8 @@ public class GameObjectInScene
             myobj.transform.localScale = Scale;
             myobj.transform.position = Position;
             myobj.transform.rotation = Rotation;
-            if(!myobj.GetComponent<MeshRenderer>())
+            Mesh mesh;
+            if (!myobj.GetComponent<MeshRenderer>())
             {
                MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
                renderer.material = new Material(Shader.Find("Standard (Specular setup)")); //we should reload the material that was orginaly on the object
@@ -122,12 +123,20 @@ public class GameObjectInScene
             {
                 ExtensionMethods.AddMeshCollider(myobj);
             }
-            Mesh mesh = myobj.GetComponent<MeshFilter>().mesh;
+            if(myobj.GetComponent<MeshFilter>() == null)
+            {
+            mesh = myobj.AddComponent<MeshFilter>().mesh;
+            }
+            else
+            {
+                mesh = myobj.GetComponent<MeshFilter>().mesh;
+            }
             mesh.vertices = Mymesh.vertices;
             mesh.triangles = Mymesh.triangles;
             mesh.normals = Mymesh.normals;
             reference = myobj;
-            return myobj;
+
+        return myobj;
         }
     }
 

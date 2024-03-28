@@ -230,8 +230,8 @@ GameObject:
   - component: {fileID: 488541676}
   - component: {fileID: 488541680}
   - component: {fileID: 488541679}
-  - component: {fileID: 488541681}
   - component: {fileID: 488541682}
+  - component: {fileID: 488541681}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -369,4 +369,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11734a743d2791b4493a40280b98af13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Instance: {fileID: 488541682}

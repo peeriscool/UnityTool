@@ -52,7 +52,7 @@ static class ExtensionMethods
 		GameObject commandmanager = new GameObject();
 		commandmanager.name = "commandmanager";
 		UIController controller = commandmanager.AddComponent<UIController>();
-		controller.initialize();
+		//controller.initialize();
 		SceneManager.MoveGameObjectToScene(commandmanager, ProjectScene);
 	}
 

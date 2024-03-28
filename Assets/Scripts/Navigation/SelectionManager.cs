@@ -20,11 +20,11 @@ public class SelectionManager
     public Stack<GameObject> ObjSelection = new Stack<GameObject>();
     public enum state {inactive, Right, hold,release }; //set status using mouse left right 
     public state selection = 0;
-    Material matref;
+    //Material matref;
     Material[] matrefs;
     Transform lastselected;
     private Vector3 m_offset;
-    Vector3 hitPoint = Vector3.zero;
+    //Vector3 hitPoint = Vector3.zero;
     Plane ground = new Plane();
     public SelectionManager()
     {
@@ -75,22 +75,23 @@ public class SelectionManager
                                 hitPoint.y = 0;
                                 Current.transform.position = ExtensionMethods.Round(hitPoint,0) + m_offset;
                             }
+
+                        Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);
                     }
-                   
                     break;
                 }
             case state.Right: //gets called when clicked
                 {
                     //deselect object
-                    if(Current) JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+                    if(Current)
+                    {
+                        JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+                        Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);
+                    }
                     Current = null;
                     Selected = false;
                     materialcheck();
-                    //UIController.PalleteObjectMenu("None");
-                    //UIController.SetScaleParameters();
-                    //UIController.UpdateUIParameters();
-                    //UIController.SetPallete(false);
-
+                    Program.instance.Uimanager.palleteHandler.SetPallete(false);
                 }
                 break;
         }
@@ -131,16 +132,13 @@ public class SelectionManager
             }
             //also do this for parent
             var renderer = selection.GetComponent<Renderer>();
-            matref = renderer.material;
-
             //set selected object and make sure we assign materials back afterwards
             if(selection.gameObject)
             {
                 Current = selection.gameObject;
                 Program.instance.Uimanager.palleteHandler.PalleteObjectMenu(Current.name);
-              Program.instance.Uimanager.palleteHandler.SetPallete(true);
-                
-                //UIController.UpdateUIParameters(); //refresh pallet ui values with object location
+                Program.instance.Uimanager.palleteHandler.SetPallete(true);
+                Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);
                 lastselected = selection;
             }
         }

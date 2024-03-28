@@ -36,7 +36,6 @@ public class PalleteHandler
             spawn.style.width = 100;
             spawn.style.height = 100;
             Sprite image = Resources.Load<Sprite>("Icons/" + name);
-            // spawn.text = name;  
             spawn.style.backgroundImage = new StyleBackground(image);
             Pallete.rootVisualElement.Q<Foldout>("ContextMenu").Add(spawn);
         }
@@ -47,13 +46,13 @@ public class PalleteHandler
             PrimitiveType mytype =(PrimitiveType) i-1;
             string name = mytype.ToString(); //should change naming
             ICommands.CreatePrefab mycom = new ICommands.CreatePrefab("Prefabs/"+name);
-            //CommandInvoker.ExecuteCommand()
-            Pallete.rootVisualElement.Q<Button>(butname).clicked += () => mycom.Execute(); //assigns button to a new ICommand
+            //CommandInvoker.ExecuteCommand(mycom)
+            Pallete.rootVisualElement.Q<Button>(butname).clicked += () => CommandInvoker.ExecuteCommand(mycom); //mycom.Execute(); //assigns button to a new ICommand
         }
     }
     void GenerateTranslationMenu()
     {
-        Label transformlabel;
+        Label transformlabel; //objectname placeholder
         transformlabel = new Label();
         transformlabel.style.fontSize = 10;
         transformlabel.name = "transformlabel";
@@ -66,6 +65,7 @@ public class PalleteHandler
         transformY = new IntegerField();
         transformZ = new IntegerField();
 
+
         transformX.value = 0;
         transformY.value = 0;
         transformZ.value = 0;
@@ -73,6 +73,10 @@ public class PalleteHandler
         transformX.label = "X";
         transformY.label = "Y";
         transformZ.label = "Z";
+
+        transformX.name = "X";
+        transformY.name = "Y";
+        transformZ.name = "Z";
 
         transformX.style.fontSize = 10;
         transformY.style.fontSize = 10;
@@ -163,5 +167,22 @@ public class PalleteHandler
          //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, rot);
         //}
     }
-    // Update is called once per frame
+    public void UpdateUIParameters(Transform activetransform)  //Sets UI Transform and rotation
+    {
+        if (SelectionManager.instance.Current)
+        {
+            Pallete.rootVisualElement.Q<IntegerField>("X").value = (int)activetransform.position.x;
+            Pallete.rootVisualElement.Q<IntegerField>("Y").value = (int)activetransform.position.y;
+            Pallete.rootVisualElement.Q<IntegerField>("Z").value = (int)activetransform.position.z;
+
+            Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value = new Vector4
+            (
+                activetransform.rotation.x,
+                activetransform.rotation.y,
+                activetransform.rotation.z,
+                activetransform.rotation.w
+            );
+            //JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.position);  ///save obj data to json
+        }
     }
+}

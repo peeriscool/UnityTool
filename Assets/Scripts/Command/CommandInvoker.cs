@@ -24,9 +24,13 @@ public class CommandInvoker
 	{
         instance = this;
     }
-
+	//public static void AddCommand(ICommand command)
+	//{
+	//	_undoStack.Push(command);
+	//}
 	public static void ExecuteCommand(ICommand command)
 	{
+		Debug.Log("Execute and adding to stack, " + command);
 		command.Execute();
 		_undoStack.Push(command);
 		// clear out the redo stack if we make a new move
@@ -35,10 +39,15 @@ public class CommandInvoker
 	public static void UndoComand()
     {		
 	    if(_undoStack.Count > 0)
-        { 
+        {
 			ICommand activecommand = _undoStack.Pop();
+			Debug.Log("Undoing: " + activecommand);
 			_redoStack.Push(activecommand);
 			activecommand.Undo();
+        }
+        else
+        {
+			Debug.Log(_undoStack.Count);
         }
     }
 	public static void RedoCommand()
@@ -48,6 +57,10 @@ public class CommandInvoker
 			ICommand activeCommand = _redoStack.Pop();
 			_undoStack.Push(activeCommand);
 			activeCommand.Execute();
+		}
+		else
+		{
+			Debug.Log(_undoStack.Count);
 		}
 	}
 }

@@ -123,13 +123,13 @@ class InputManager
         //If ctrl Undo
         if (context.action.activeControl == Keyboard.current.zKey && active == Modifier.Ctrl)
         {
-            Debug.Log(context.action.activeControl.name);
+          //  Debug.Log("ctrl " + context.action.activeControl.name);
             CommandInvoker.UndoComand();
         }
         //If ctrl Redo
         if (context.action.activeControl == Keyboard.current.yKey && active == Modifier.Ctrl)
         {
-            Debug.Log(context.action.activeControl.name);
+         //   Debug.Log("ctrl " + context.action.activeControl.name);
             CommandInvoker.RedoCommand();
         }
         //If ctrl Paste

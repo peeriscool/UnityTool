@@ -125,12 +125,13 @@ public class ICommands
         }
         public void Execute()
         {
-            GameObject.Instantiate(Myobject);
+            Myobject = GameObject.Instantiate(Myobject);
         }
 
         public void Undo()
         {
-            GameObject.Destroy(Myobject);
+            //Myobject.active = false;
+           GameObject.Destroy(Myobject);
         }
     }
     public class ExportCommand : ICommand
@@ -306,7 +307,7 @@ public class ICommands
                         JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
 
                         ExtensionMethods.MakeStartCube(ProjectScene);
-                        ExtensionMethods.CreateManager(ProjectScene);
+                        //ExtensionMethods.CreateManager(ProjectScene);
                         ExtensionMethods.makebaseplane(ProjectScene);
                     }
                     else  //Toggle Back to Menu
@@ -336,7 +337,7 @@ public class ICommands
                         ProjectScene = UnityEngine.SceneManagement.SceneManager.CreateScene(ProjectName); //should use a file version number
                         UnityEngine.SceneManagement.SceneManager.SetActiveScene(ProjectScene);
                     }
-                    ExtensionMethods.CreateManager(ProjectScene);
+                   // ExtensionMethods.CreateManager(ProjectScene);
                     ExtensionMethods.makebaseplane(ProjectScene);
                 }
               //  toggle();

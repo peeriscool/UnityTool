@@ -175,7 +175,7 @@ public class ICommands
         }
     }
     public class SaveCommand : ICommand
-    {   
+    {
         public SaveCommand()
         {
 
@@ -196,7 +196,7 @@ public class ICommands
 
         public void Undo()
         {
-            
+
         }
     }
     public class ImportCommand : ICommand
@@ -249,6 +249,106 @@ public class ICommands
         public void Undo()
         {
             throw new NotImplementedException();
+        }
+    }
+    public class OpenProjctFile : ICommand
+    {
+            //gets called by the load buttonclick
+        
+        public void Execute()
+        {
+            //(ProjectScene.name == "empty") //we still have an unused scene with possible use
+            //{
+            //    SceneManager.UnloadSceneAsync(ProjectScene);
+            //}
+            var bp = new AnotherFileBrowser.Windows.BrowserProperties();
+            bp.filter = "Json files (*.Json)|*.Json|All Files (*.*)|*.*"; //TODO: Implement Json
+            bp.filterIndex = 0;
+
+            new AnotherFileBrowser.Windows.FileBrowser().OpenFileBrowser(bp, path =>
+            {
+                Debug.Log("Loading" + bp + " Json project from" + path);
+                ProjectData MyFile = JSONSerializer.Load<ProjectData>(path); //contains file name and extention
+              //  StartProjectFromJson(MyFile.ProjectName);
+                JsonFileToProject.LoadData(MyFile); //set project data instance
+            });
+        }
+    
+
+        public void Undo()
+        {
+            
+        }
+
+     
+    }
+    public class NewFile : ICommand
+    {
+        UnityEngine.SceneManagement.Scene ProjectScene;
+        string ProjectName;
+        public NewFile(UnityEngine.SceneManagement.Scene _ProjectScene, string _ProjectName)
+        {
+            ProjectScene = _ProjectScene;
+            ProjectName = _ProjectName;
+        }
+        //UnityEngine.SceneManagement.Scene
+        public void Execute()
+        {
+             //should be divided in to different load functions for Json and creating a new project
+                if (ProjectName == "Empty") //If its a new file populate with serializable objects
+                {
+                    if (!UnityEngine.SceneManagement.SceneManager.GetSceneByName("Empty").isLoaded)
+                    {
+                        ProjectScene = UnityEngine.SceneManagement.SceneManager.CreateScene(ProjectName); //should use a version number
+                        UnityEngine.SceneManagement.SceneManager.SetActiveScene(ProjectScene);
+                        JsonFileToProject.ProjectFile = new ProjectData();
+                        JsonFileToProject.ProjectFile.Version = Mathf.Round(0.1f);
+                        JsonFileToProject.ProjectFile.SceneObjects = new List<GameObjectInScene>();
+
+                        ExtensionMethods.MakeStartCube(ProjectScene);
+                        ExtensionMethods.CreateManager(ProjectScene);
+                        ExtensionMethods.makebaseplane(ProjectScene);
+                    }
+                    else  //Toggle Back to Menu
+                    {
+                 //       Menu.rootVisualElement.visible = false;
+                    }
+                }
+
+                else //we already should have the data from Json
+                {
+                    Debug.Log("Opening: " + ProjectName);
+
+                    for (int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++)
+                    {
+                        if (UnityEngine.SceneManagement.SceneManager.GetSceneAt(i).name == ProjectName)  //check if scene already exists
+                        {
+                            //Can not create scene until old one is removed
+                            Debug.Log("Unloading: " + UnityEngine.SceneManagement.SceneManager.GetSceneAt(i).name);
+                            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(ProjectScene);
+                            ProjectName = "Empty";
+                            JsonFileToProject.ProjectFile = new ProjectData();
+                        }
+                    }
+
+                    if (ProjectName != null)
+                    {
+                        ProjectScene = UnityEngine.SceneManagement.SceneManager.CreateScene(ProjectName); //should use a file version number
+                        UnityEngine.SceneManagement.SceneManager.SetActiveScene(ProjectScene);
+                    }
+                    ExtensionMethods.CreateManager(ProjectScene);
+                    ExtensionMethods.makebaseplane(ProjectScene);
+                }
+              //  toggle();
+                FlyCamera.Instance.enabled = true;
+                UnityEngine.Cursor.visible = false;
+            
+
+        }
+
+        public void Undo()
+        {
+          
         }
     }
 }

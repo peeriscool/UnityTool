@@ -4,24 +4,24 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
-public class PalleteHandler : MonoBehaviour
+public class PalleteHandler
 {
-    UIDocument Pallete;
-    // Start is called before the first frame update
-    void Start()
+    public UIDocument Pallete;
+
+    public PalleteHandler(UIDocument Owner)
     {
-        Pallete = this.gameObject.GetComponent<UIDocument>();
-        //Pallete.panelSettings = Resources.Load<PanelSettings>("PanelSettings");
-        //VisualTreeAsset visualTree = Resources.Load<VisualTreeAsset>("Pallete");
-        //if (visualTree != null)
-        //{
-        //    var uiContainer = new VisualElement();
-        //    visualTree.CloneTree(uiContainer);
-        //    Pallete.rootVisualElement.Add(uiContainer);
-        //}
-        LoadUi();
+        Pallete = Owner;
     }
-    void LoadUi()
+    public void initialize()
+    {
+        //sets the uidocument and panelsettings, loads visualtree asset 
+        Pallete.panelSettings = Resources.Load<PanelSettings>("PanelSettings");
+        VisualTreeAsset visualTree = Resources.Load<VisualTreeAsset>("Pallete");
+        var uiContainer = new VisualElement();
+        visualTree.CloneTree(uiContainer); 
+        Pallete.rootVisualElement.Add(uiContainer);
+    }
+    public void LoadUi()
     {
         GenerateButtons();
         GenerateTranslationMenu();  
@@ -46,7 +46,7 @@ public class PalleteHandler : MonoBehaviour
             string butname = "Button" + i.ToString();
             PrimitiveType mytype =(PrimitiveType) i-1;
             string name = mytype.ToString(); //should change naming
-            ICommands.CreatePrefab mycom = new ICommands.CreatePrefab(name);
+            ICommands.CreatePrefab mycom = new ICommands.CreatePrefab("Prefabs/"+name);
             //CommandInvoker.ExecuteCommand()
             Pallete.rootVisualElement.Q<Button>(butname).clicked += () => mycom.Execute(); //assigns button to a new ICommand
         }
@@ -56,7 +56,7 @@ public class PalleteHandler : MonoBehaviour
         Label transformlabel;
         transformlabel = new Label();
         transformlabel.style.fontSize = 10;
-        transformlabel.name = "transform vector";
+        transformlabel.name = "transformlabel";
 
         IntegerField transformX;
         IntegerField transformY;
@@ -96,8 +96,6 @@ public class PalleteHandler : MonoBehaviour
 
         Foldout translation = Pallete.rootVisualElement.Q<Foldout>("Translation");
         translation.SetEnabled(false);
-        //translation.value = false;
-        //  transformation.Add(Scale);
         translation.Add(transformlabel);
         translation.Add(transformX);
         translation.Add(transformY);
@@ -127,6 +125,15 @@ public class PalleteHandler : MonoBehaviour
         Rotation.RegisterValueChangedCallback(x => SetSelectedParameters());
 
         Debug.Log("Loaded Translation menu");
+    }
+    public void PalleteObjectMenu(string name)
+    {
+        Pallete.rootVisualElement.Q<Label>("transformlabel").text = name;
+    }
+    public  void SetPallete(bool status)
+    {
+        Pallete.rootVisualElement.Q<Foldout>("Translation").SetEnabled(status);
+        Pallete.rootVisualElement.Q<Foldout>("Translation").value = status;
     }
     public static void GetScaleParameters() //Make to Command
     {

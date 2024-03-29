@@ -74,14 +74,20 @@ public class ICommands
         Vector3 location;
         public SetPositionCommand(Vector3 _location, Transform _transform)
         {
-            location = _location;
-            transform = _transform;
-
+            if (_transform != null)
+            {
+                location = _location;
+                transform = _transform;
+            }
+            //object is rendered useless  without transform
         }
         public void Execute()
         {
-            Oldlocation = transform.position;
-            transform.position = location;
+            if(transform != null)
+            {
+                Oldlocation = transform.position;
+                transform.position = location;
+            }
         }
 
         public void Undo()

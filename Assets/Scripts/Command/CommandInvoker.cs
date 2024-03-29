@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -24,11 +25,13 @@ public class CommandInvoker
 	{
         instance = this;
     }
-	//public static void AddCommand(ICommand command)
-	//{
-	//	_undoStack.Push(command);
-	//}
-	public static void ExecuteCommand(ICommand command)
+    public static void GetFromStack(ICommand command, int index)
+    {
+		// _undoStack.Push(command);
+		_undoStack.ElementAt(index);
+
+    }
+    public static void ExecuteCommand(ICommand command)
 	{
 		Debug.Log("Execute and adding to stack, " + command);
 		command.Execute();

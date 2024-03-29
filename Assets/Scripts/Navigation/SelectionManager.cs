@@ -16,7 +16,7 @@ public class SelectionManager
     bool Selected = false;
     bool place = false;
     public static SelectionManager instance;
-    public GameObject Current; //object that need commands
+    public static GameObject Current; //object that need commands
     public Stack<GameObject> ObjSelection = new Stack<GameObject>();
     public enum state {inactive, Right, hold,release }; //set status using mouse left right 
     public state selection = 0;
@@ -152,5 +152,13 @@ public class SelectionManager
             Debug.Log(hitPoint + "Groundraycast");
         }
 
+    }
+    public static Transform GetCurrentTransform()
+    {
+        if(Current)
+        {
+            return Current.transform;
+        }
+        return null;
     }
 }

@@ -49,7 +49,7 @@ public class ProjectData
             if (SceneObjects[i].Name == objname)
             {
                 SceneObjects[i].Position = position;
-                Debug.Log(SceneObjects[i].Position + " data/object" +position);
+               // Debug.Log(SceneObjects[i].Position + " data/object" +position);
 
                 //object found set data to refrence
             }
@@ -62,7 +62,7 @@ public class ProjectData
             if (SceneObjects[i].Name == objname)
             {
                 SceneObjects[i].Rotation = rotation;
-                Debug.Log(SceneObjects[i].Position + " data/object" + rotation);
+             //   Debug.Log(SceneObjects[i].Position + " data/object" + rotation);
 
                 //object found set data to refrence
             }

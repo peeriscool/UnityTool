@@ -7,7 +7,7 @@ using UnityEngine.UIElements;
 public class PalleteHandler
 {
     public UIDocument Pallete;
-
+    Vector3 lastvalue = new Vector3();  //remembering position value in pallete UI
     public PalleteHandler(UIDocument Owner)
     {
         Pallete = Owner;
@@ -57,37 +57,16 @@ public class PalleteHandler
         transformlabel.style.fontSize = 10;
         transformlabel.name = "transformlabel";
 
-        IntegerField transformX;
-        IntegerField transformY;
-        IntegerField transformZ;
+        Vector3Field transformfield = new Vector3Field();
+        transformfield.name = "transformfield";
+        transformfield.value = Vector3.zero;
+        transformfield.label = "X-Y-Z";
+        transformfield.style.fontSize = 10;
 
-        transformX = new IntegerField();
-        transformY = new IntegerField();
-        transformZ = new IntegerField();
-
-
-        transformX.value = 0;
-        transformY.value = 0;
-        transformZ.value = 0;
-
-        transformX.label = "X";
-        transformY.label = "Y";
-        transformZ.label = "Z";
-
-        transformX.name = "X";
-        transformY.name = "Y";
-        transformZ.name = "Z";
-
-        transformX.style.fontSize = 10;
-        transformY.style.fontSize = 10;
-        transformZ.style.fontSize = 10;
-        transformX.AddToClassList("PalleteStyle");
-        transformX.style.maxHeight = 50;
-        transformX.style.maxWidth = 200;
-
-        IntegerField Scale;
-        Scale = new IntegerField();
-        Scale.value = 1;
+        Vector3Field Scale;
+        Scale = new Vector3Field();
+        Scale.value = Vector3.one;
+        Scale.name = "Scale";
         Scale.label = "Scale";
         Scale.style.fontSize = 10;
 
@@ -101,9 +80,9 @@ public class PalleteHandler
         Foldout translation = Pallete.rootVisualElement.Q<Foldout>("Translation");
         translation.SetEnabled(false);
         translation.Add(transformlabel);
-        translation.Add(transformX);
-        translation.Add(transformY);
-        translation.Add(transformZ);
+        translation.Add(transformfield);
+       // translation.Add(transformY);
+       /// translation.Add(transformZ);
         translation.Add(Scale);
         translation.Add(Rotation);
 
@@ -122,13 +101,20 @@ public class PalleteHandler
         Savebutton.clicked += save.Execute;
         Import.clicked += import.Execute;
         //ImportTexture.clicked += ImportTextureEvent;
-        Scale.RegisterValueChangedCallback(x => GetScaleParameters());
-        transformX.RegisterValueChangedCallback(x => SetSelectedParameters());
-        transformY.RegisterValueChangedCallback(x => SetSelectedParameters());
-        transformZ.RegisterValueChangedCallback(x => SetSelectedParameters());
-        Rotation.RegisterValueChangedCallback(x => SetSelectedParameters());
-
+        Scale.RegisterValueChangedCallback(x => SetObjectScaleParameters());
+        transformfield.RegisterValueChangedCallback(x => NewMoveCommand());
+        Rotation.RegisterValueChangedCallback(x => SetUIParameters());
         Debug.Log("Loaded Translation menu");
+    }
+    
+    private void NewMoveCommand()
+    {
+        if(Vector3Int.RoundToInt( ExtensionMethods.Round(Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value)) != Vector3Int.RoundToInt(lastvalue))  //only register new position when value is marginaly different with current positon
+        {
+            Vector3 RoundedPosition = ExtensionMethods.Round(Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value);
+            CommandInvoker.ExecuteCommand(new ICommands.SetPositionCommand(RoundedPosition, SelectionManager.GetCurrentTransform()));
+            lastvalue = RoundedPosition;
+        }
     }
     public void PalleteObjectMenu(string name)
     {
@@ -139,42 +125,41 @@ public class PalleteHandler
         Pallete.rootVisualElement.Q<Foldout>("Translation").SetEnabled(status);
         Pallete.rootVisualElement.Q<Foldout>("Translation").value = status;
     }
-    public static void GetScaleParameters() //Make to Command
+    public void SetObjectScaleParameters()
     {
-        //if (SelectionManager.instance.Current)
-        //{
-        //    SelectionManager.instance.Current.transform.localScale = new Vector3(Scale.value, Scale.value, Scale.value);
-        //    JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, Scale.value);
-        //}
+        if (SelectionManager.Current)
+        {
+            Transform activetransform = SelectionManager.Current.transform;
+            Vector3 AplliedScale = Pallete.rootVisualElement.Q<Vector3Field>("Scale").value;
+            activetransform.localScale = AplliedScale; //what is value??
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(activetransform.name, AplliedScale);
+        }
     }
-    public static void SetSelectedParameters() //Make to Command
+    public void SetUIParameters() //Make to Command
     {
-        //if (SelectionManager.instance.Current)
-        //{
-        //    Vector3 position = new Vector3(transformX.value, transformY.value, transformZ.value);
-        //    SelectionManager.instance.Current.transform.position = position;
-        //    Quaternion rot = new Quaternion
-        //        (
-        //            Rotation.value.x,
-        //            Rotation.value.y,
-        //            Rotation.value.z,
-        //            Rotation.value.w
-        //        );
-        //    SelectionManager.instance.Current.transform.rotation = rot;
+        if (SelectionManager.Current)
+        {
+            Vector3 position = Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value;
+            SelectionManager.Current.transform.position = position;
 
+            Quaternion rot = new Quaternion
+                (
+                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.x,
+                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.y,
+                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.z,
+                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.w
+                );
+            SelectionManager.Current.transform.rotation = rot;
 
-         //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, position);  ///save obj data to json
-         //   JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, rot);
-        //}
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current.name, position);  ///save obj data to json
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current.name, rot);
+        }
     }
     public void UpdateUIParameters(Transform activetransform)  //Sets UI Transform and rotation
     {
-        if (SelectionManager.instance.Current)
+        if (SelectionManager.Current)
         {
-            Pallete.rootVisualElement.Q<IntegerField>("X").value = (int)activetransform.position.x;
-            Pallete.rootVisualElement.Q<IntegerField>("Y").value = (int)activetransform.position.y;
-            Pallete.rootVisualElement.Q<IntegerField>("Z").value = (int)activetransform.position.z;
-
+           Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value = ExtensionMethods.Round(activetransform.position);
             Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value = new Vector4
             (
                 activetransform.rotation.x,
@@ -185,4 +170,5 @@ public class PalleteHandler
             //JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.instance.Current.name, SelectionManager.instance.transform.position);  ///save obj data to json
         }
     }
+    
 }

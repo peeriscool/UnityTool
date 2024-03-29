@@ -25,7 +25,6 @@ public class ProjectData
 
     public static void AddobjList(GameObject _Obj)
     {
-       
             Debug.Log("Nieuwe data:" + _Obj.name);
             GameObjectInScene obj = new GameObjectInScene(_Obj);
             JsonFileToProject.ProjectFile.SceneObjects.Add(obj);

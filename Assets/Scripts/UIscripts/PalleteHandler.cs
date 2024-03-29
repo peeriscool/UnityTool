@@ -30,7 +30,7 @@ public class PalleteHandler
     {
         for (int i = 1; i < 7; i++)
         {
-            string name = "Button" + i.ToString();
+            string name = "Button" + i.ToString();      
             Button spawn = new Button();
             spawn.name = name;
             spawn.style.width = 100;

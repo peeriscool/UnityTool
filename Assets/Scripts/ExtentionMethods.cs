@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 static class ExtensionMethods
 {
@@ -59,13 +60,7 @@ static class ExtensionMethods
     //https://gist.github.com/danielbierwirth/4704573841072d4646f950685fb86c04
     public static void AddMeshCollider(GameObject containerModel)
     {
-        // Add mesh collider
-        MeshFilter meshFilter = containerModel.GetComponent<MeshFilter>();
-        if (meshFilter != null)
-        {
-            MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
-            meshCollider.sharedMesh = meshFilter.sharedMesh;
-        }
+       
         // Add mesh collider (convex) for each mesh in child elements.
         Component[] meshes = containerModel.GetComponentsInChildren<MeshFilter>();
         foreach (MeshFilter mesh in meshes)
@@ -73,6 +68,44 @@ static class ExtensionMethods
             MeshCollider meshCollider = containerModel.AddComponent<MeshCollider>();
             meshCollider.sharedMesh = mesh.sharedMesh;
         }
+    }
+    public static Mesh Extract(Mesh m, int meshIndex)
+    {
+        var vertices = m.vertices;
+        var normals = m.normals;
+        var uvs = m.uv;
+
+        var newVerts = new List<Vector3>();
+        var newNorms = new List<Vector3>();
+        var newUVs = new List<Vector2>();
+        var newTris = new List<int>();
+        var triangles = m.GetTriangles(meshIndex);
+        for (var i = 0; i < triangles.Length; i += 3)
+        {
+            var A = triangles[i + 0];
+            var B = triangles[i + 1];
+            var C = triangles[i + 2];
+            newVerts.Add(vertices[A]);
+            newVerts.Add(vertices[B]);
+            newVerts.Add(vertices[C]);
+            newNorms.Add(normals[A]);
+            newNorms.Add(normals[B]);
+            newNorms.Add(normals[C]);
+            newUVs.Add(uvs[A]);
+            newUVs.Add(uvs[B]);
+            newUVs.Add(uvs[C]);
+            newTris.Add(newTris.Count);
+            newTris.Add(newTris.Count);
+            newTris.Add(newTris.Count);
+        }
+        var mesh = new Mesh();
+        mesh.indexFormat = newVerts.Count > 65536 ? IndexFormat.UInt32 : IndexFormat.UInt16;
+        mesh.SetVertices(newVerts);
+        mesh.SetNormals(newNorms);
+        mesh.SetUVs(0, newUVs);
+        mesh.SetTriangles(newTris, 0, true);
+
+        return mesh;
     }
     /// <summary>
     /// NOT OPTIMIZED!!! Fixes the colliders when pivot point is not on mesh location

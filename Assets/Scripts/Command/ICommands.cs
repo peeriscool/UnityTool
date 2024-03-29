@@ -221,13 +221,12 @@ public class ICommands
             bp.filter = "Obj files (*.obj)|*.obj|All Files (*.*)|*.*"; //TODO:mtl
             bp.filterIndex = 0;
 
-            //lambda expresion Anonimus function
-            //https://learn.microsoft.com/nl-nl/dotnet/csharp/language-reference/operators/lambda-expressions
             new AnotherFileBrowser.Windows.FileBrowser().OpenFileBrowser(bp, path =>
             {
                 Debug.Log("Loading" + bp + " Json project from" + path);
                 ImportedObject = ObjModel.Load(path);
             });
+
             MeshRenderer render = ImportedObject.AddComponent<MeshRenderer>();
             MeshFilter filter;
 
@@ -235,22 +234,28 @@ public class ICommands
             {
                 filter = _filter;
             }
-            else //make empty filter
+            else 
             {
-                //try  to get from child
+                //try to get from child
                 if (ImportedObject.GetComponentInChildren<MeshFilter>())
                 {
                     filter = ImportedObject.GetComponentInChildren<MeshFilter>();
                 }
-                else
+                else //make empty filter
                 {
-                    Debug.Log("Adding meshfilter to root");
+                    Debug.Log("Warning: Adding Empty mesh filter!");
                     filter = ImportedObject.AddComponent<MeshFilter>();
                 }
             }
+            
+	        ImportedObject.AddComponent<MeshFilter>().mesh = filter.mesh;
+            Debug.Log("Transform childs" + ImportedObject.transform.childCount);
+            for (int i = 0; i < ImportedObject.transform.childCount; i++)
+            {
+                Transform child= ImportedObject.transform.GetChild(i);
+                JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(child));
+            }
             ExtensionMethods.AddMeshCollider(ImportedObject);
-            //GenerateBoxcolliderOnMesh(ImportedObject, filter);
-            JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject, filter));
         }
 
         public void Undo()
@@ -276,7 +281,7 @@ public class ICommands
             {
                 Debug.Log("Loading" + bp + " Json project from" + path);
                 ProjectData MyFile = JSONSerializer.Load<ProjectData>(path); //contains file name and extention
-              //  StartProjectFromJson(MyFile.ProjectName);
+                //  StartProjectFromJson(MyFile.ProjectName);
                 JsonFileToProject.LoadData(MyFile); //set project data instance
             });
         }

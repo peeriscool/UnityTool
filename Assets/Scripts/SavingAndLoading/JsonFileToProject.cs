@@ -51,6 +51,8 @@ static class JsonFileToProject
 [System.Serializable]
 public class GameObjectInScene
     {
+    enum Owner { none,Root,Child,Subchild}
+    public int ownerID;
     private GameObject reference;
     public MeshSaveData Mymesh; //root
     /// public MeshSaveData[] Mymeshes; //additional meshes 
@@ -62,7 +64,7 @@ public class GameObjectInScene
     {
     return reference;
     }
-    public GameObjectInScene(Transform childobject)
+    public GameObjectInScene(Transform childobject, int ownervalue)
     {
         GameObject obj = new GameObject();
         reference = obj;
@@ -71,7 +73,7 @@ public class GameObjectInScene
         Position = childobject.position;
         Rotation = childobject.rotation;
         Mymesh = new MeshSaveData(childobject.GetComponent<MeshFilter>().mesh); //adds empty meshfilter
-
+        ownerID = ownervalue;
     }
     /// <summary>
     /// adds an empty meshs
@@ -123,7 +125,8 @@ public class GameObjectInScene
         myobj.transform.localScale = Scale;
         myobj.transform.position = Position;
         myobj.transform.rotation = Rotation;
-
+        
+         
         if (!myobj.GetComponent<MeshRenderer>())
         {
             MeshRenderer renderer = myobj.AddComponent<MeshRenderer>();
@@ -141,61 +144,41 @@ public class GameObjectInScene
         if(mesh.subMeshCount >= 0)
         {
             //we have submeshes
-            Debug.Log("Submeshes: " + mesh.subMeshCount);
+            
         }
         mesh.vertices = Mymesh.vertices;
         mesh.triangles = Mymesh.triangles;
         mesh.normals = Mymesh.normals;
         reference = myobj;
-
-        //if (Mymesh != null)
-        //{
-        //    try
-        //    {
-
-        //        if (Mymesh.triangles != null) mesh.triangles = Mymesh.triangles;
-        //        if (Mymesh.vertices != null) mesh.vertices = Mymesh.vertices;
-        //        if (Mymesh.normals != null) mesh.normals = Mymesh.normals;
-
-        //    }
-        //    catch (Exception a)
-        //    {
-        //        Debug.LogException(a);
-        //        throw;
-        //    }
-        //}
-
-        //we dont have a mesh for this object
-
-
-
-        //if(Mymeshes.Length >= 0)
-        //{
-        //    //get submeshes
-        //    for (int i = 0; i < Mymeshes.Length; i++)
-        //    {
-        //        Debug.Log("tri " +Mymeshes[i].triangles.Length);
-        //        Debug.Log("norm " + Mymeshes[i].normals.Length);
-        //        Debug.Log("norm " + Mymeshes[i].normals.Length);
-        //        Debug.Log("vert " + Mymeshes[i].vertices.Length);
-        //    }
-        //}
-        Debug.Log("_tri" + mesh.triangles.Length + "_vert" + mesh.vertices.Length + "_norm" + mesh.normals.Length);
+        if(ownerID == (int)Owner.Root)
+        {
+            RootObject(myobj.transform);
+        }
+        if (ownerID == (int)Owner.Child)
+        {
+            //we want to add this to a root object
+            RootObject(myobj.transform);
+        }
+        //Debug.Log("_tri" + mesh.triangles.Length + "_vert" + mesh.vertices.Length + "_norm" + mesh.normals.Length);
         
         ExtensionMethods.AddMeshCollider(myobj);
-
-        //mesh.RecalculateBounds();
-
-        //    Debug.Log("Getting commponentsInChilderen" + myobj.name.ToString());
-        //    MeshFilter[] meshFilters = myobj.GetComponentsInChildren<MeshFilter>();
-        //    mesh = myobj.GetComponent<MeshFilter>().mesh;
-
-        //        mesh.vertices = Mymesh.vertices;
-        //        mesh.triangles = Mymesh.triangles;
-        //        mesh.normals = Mymesh.normals;
-        //        reference = myobj;
-
         return myobj;
+    }
+    public void RootObject(Transform myobject) //add childs to root object creates root if necessary
+    {
+        if(ownerID == (int)Owner.Root)
+        {
+            Debug.Log("make root object" + Name);
+            //GameObject root = new GameObject();
+            myobject.gameObject.tag = "Root";
+        }
+        if(ownerID == (int)Owner.Child)
+        {
+                GameObject[] parents = GameObject.FindGameObjectsWithTag("Root");
+                myobject.SetParent(parents[0].transform);
+                Debug.Log("Assigning as child" + Name);
+           
+        }
     }
 }
 

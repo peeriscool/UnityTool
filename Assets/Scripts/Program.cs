@@ -38,6 +38,9 @@ public class Program : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        Selectionmanager.UpdateInput();
+        if(SceneManager.GetActiveScene().name != "StartMenu")
+        {
+            Selectionmanager.UpdateInput();
+        }
     }
 }

@@ -91,7 +91,7 @@ public class SelectionManager
                     Current = null;
                     Selected = false;
                     materialcheck();
-                    Program.instance.Uimanager.palleteHandler.SetPallete(false);
+                    if(Program.instance.Uimanager.activeUI == "Pallete") Program.instance.Uimanager.palleteHandler.SetPallete(false);
                 }
                 break;
         }
@@ -135,7 +135,7 @@ public class SelectionManager
             //set selected object and make sure we assign materials back afterwards
             if(selection.gameObject)
             {
-                Current = selection.gameObject;
+                Current = selection.gameObject; 
                 Program.instance.Uimanager.palleteHandler.PalleteObjectMenu(Current.name);
                 Program.instance.Uimanager.palleteHandler.SetPallete(true);
                 Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);

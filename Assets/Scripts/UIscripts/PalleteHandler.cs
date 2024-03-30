@@ -7,10 +7,12 @@ using UnityEngine.UIElements;
 public class PalleteHandler
 {
     public UIDocument Pallete;
+    public VisualElement PalleteElement;
     Vector3 lastvalue = new Vector3();  //remembering position value in pallete UI
-    public PalleteHandler(UIDocument Owner)
+    public PalleteHandler(UIDocument parent)
     {
-        Pallete = Owner;
+        Pallete = parent;
+        PalleteElement = new VisualElement();
     }
     public void initialize()
     {
@@ -18,13 +20,15 @@ public class PalleteHandler
         Pallete.panelSettings = Resources.Load<PanelSettings>("PanelSettings");
         VisualTreeAsset visualTree = Resources.Load<VisualTreeAsset>("Pallete");
         var uiContainer = new VisualElement();
-        visualTree.CloneTree(uiContainer); 
-        Pallete.rootVisualElement.Add(uiContainer);
+        visualTree.CloneTree(uiContainer);
+        PalleteElement.Add(uiContainer);
+        GenerateButtons();
+        GenerateTranslationMenu();
     }
     public void LoadUi()
     {
-        GenerateButtons();
-        GenerateTranslationMenu();  
+        UiManager.ui.rootVisualElement.Clear();
+        UiManager.ui.rootVisualElement.Add(PalleteElement);
     }
     void GenerateButtons() //loads 
     {
@@ -37,7 +41,7 @@ public class PalleteHandler
             spawn.style.height = 100;
             Sprite image = Resources.Load<Sprite>("Icons/" + name);
             spawn.style.backgroundImage = new StyleBackground(image);
-            Pallete.rootVisualElement.Q<Foldout>("ContextMenu").Add(spawn);
+            PalleteElement.Q<Foldout>("ContextMenu").Add(spawn);
         }
 
         for (int i = 1; i < 7; i++) //get context menu buttons assign click function
@@ -47,7 +51,7 @@ public class PalleteHandler
             string name = mytype.ToString(); //should change naming
             ICommands.CreatePrefab mycom = new ICommands.CreatePrefab("Prefabs/"+name);
             //CommandInvoker.ExecuteCommand(mycom)
-            Pallete.rootVisualElement.Q<Button>(butname).clicked += () => CommandInvoker.ExecuteCommand(mycom); //mycom.Execute(); //assigns button to a new ICommand
+            PalleteElement.Q<Button>(butname).clicked += () => CommandInvoker.ExecuteCommand(mycom); //mycom.Execute(); //assigns button to a new ICommand
         }
     }
     void GenerateTranslationMenu()
@@ -77,7 +81,7 @@ public class PalleteHandler
         Rotation.value = new Vector4();
         Rotation.style.fontSize = 10;
 
-        Foldout translation = Pallete.rootVisualElement.Q<Foldout>("Translation");
+        Foldout translation = PalleteElement.Q<Foldout>("Translation");
         translation.SetEnabled(false);
         translation.Add(transformlabel);
         translation.Add(transformfield);
@@ -87,10 +91,10 @@ public class PalleteHandler
         translation.Add(Rotation);
 
         //create buttons
-        Button Exportbutton = Pallete.rootVisualElement.Q<Button>("Export");
-        Button Savebutton = Pallete.rootVisualElement.Q<Button>("SaveBut");
-        Button Import = Pallete.rootVisualElement.Q<Button>("ImportBut");
-        Button ImportTexture = Pallete.rootVisualElement.Q<Button>("ImageBut");
+        Button Exportbutton = PalleteElement.Q<Button>("Export");
+        Button Savebutton = PalleteElement.Q<Button>("SaveBut");
+        Button Import = PalleteElement.Q<Button>("ImportBut");
+        Button ImportTexture = PalleteElement.Q<Button>("ImageBut");
         ImportTexture.SetEnabled(false);
 
         ICommands.ExportCommand Export = new ICommands.ExportCommand();
@@ -109,28 +113,28 @@ public class PalleteHandler
     
     private void NewMoveCommand()
     {
-        if(Vector3Int.RoundToInt( ExtensionMethods.Round(Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value)) != Vector3Int.RoundToInt(lastvalue))  //only register new position when value is marginaly different with current positon
+        if(Vector3Int.RoundToInt( ExtensionMethods.Round(PalleteElement.Q<Vector3Field>("transformfield").value)) != Vector3Int.RoundToInt(lastvalue))  //only register new position when value is marginaly different with current positon
         {
-            Vector3 RoundedPosition = ExtensionMethods.Round(Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value);
+            Vector3 RoundedPosition = ExtensionMethods.Round(PalleteElement.Q<Vector3Field>("transformfield").value);
             CommandInvoker.ExecuteCommand(new ICommands.SetPositionCommand(RoundedPosition, SelectionManager.GetCurrentTransform()));
             lastvalue = RoundedPosition;
         }
     }
     public void PalleteObjectMenu(string name)
     {
-        Pallete.rootVisualElement.Q<Label>("transformlabel").text = name;
-    }
-    public  void SetPallete(bool status)
+     if(Program.instance.Uimanager.activeUI == "Pallete") PalleteElement.Q<Label>("transformlabel").text = name;
+    }   
+    public void SetPallete(bool status)
     {
-        Pallete.rootVisualElement.Q<Foldout>("Translation").SetEnabled(status);
-        Pallete.rootVisualElement.Q<Foldout>("Translation").value = status;
+        PalleteElement.Q<Foldout>("Translation").SetEnabled(status);
+        PalleteElement.Q<Foldout>("Translation").value = status;
     }
     public void SetObjectScaleParameters()
     {
         if (SelectionManager.Current)
         {
             Transform activetransform = SelectionManager.Current.transform;
-            Vector3 AplliedScale = Pallete.rootVisualElement.Q<Vector3Field>("Scale").value;
+            Vector3 AplliedScale = PalleteElement.Q<Vector3Field>("Scale").value;
             activetransform.localScale = AplliedScale; //what is value??
             JsonFileToProject.ProjectFile.SetDataFromRefrence(activetransform.name, AplliedScale);
         }
@@ -139,15 +143,15 @@ public class PalleteHandler
     {
         if (SelectionManager.Current)
         {
-            Vector3 position = Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value;
+            Vector3 position = PalleteElement.Q<Vector3Field>("transformfield").value;
             SelectionManager.Current.transform.position = position;
 
             Quaternion rot = new Quaternion
                 (
-                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.x,
-                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.y,
-                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.z,
-                    Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value.w
+                    PalleteElement.Q<Vector4Field>("rotatevector").value.x,
+                    PalleteElement.Q<Vector4Field>("rotatevector").value.y,
+                    PalleteElement.Q<Vector4Field>("rotatevector").value.z,
+                    PalleteElement.Q<Vector4Field>("rotatevector").value.w
                 );
             SelectionManager.Current.transform.rotation = rot;
 
@@ -157,10 +161,10 @@ public class PalleteHandler
     }
     public void UpdateUIParameters(Transform activetransform)  //Sets UI Transform and rotation
     {
-        if (SelectionManager.Current)
+        if (SelectionManager.Current && Program.instance.Uimanager.activeUI == "Pallete")
         {
-           Pallete.rootVisualElement.Q<Vector3Field>("transformfield").value = ExtensionMethods.Round(activetransform.position);
-            Pallete.rootVisualElement.Q<Vector4Field>("rotatevector").value = new Vector4
+            PalleteElement.Q<Vector3Field>("transformfield").value = ExtensionMethods.Round(activetransform.position);
+            PalleteElement.Q<Vector4Field>("rotatevector").value = new Vector4
             (
                 activetransform.rotation.x,
                 activetransform.rotation.y,

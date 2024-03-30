@@ -250,7 +250,7 @@ public class ICommands
             
 	        ImportedObject.AddComponent<MeshFilter>().mesh = filter.mesh;
             Debug.Log("Transform childs" + ImportedObject.transform.childCount);
-            JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject.transform.GetChild(0), 1)); //assign root  object
+            JsonFileToProject.ProjectFile.SceneObjects.Add(new GameObjectInScene(ImportedObject.transform, 1)); //assign root  object
             for (int i = 1; i < ImportedObject.transform.childCount; i++)
             {
                 Transform child= ImportedObject.transform.GetChild(i);

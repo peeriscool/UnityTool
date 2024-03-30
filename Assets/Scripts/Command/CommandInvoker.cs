@@ -25,10 +25,10 @@ public class CommandInvoker
 	{
         instance = this;
     }
-    public static void GetFromStack(ICommand command, int index)
+    public static ICommand GetFromStack(int index)
     {
 		// _undoStack.Push(command);
-		_undoStack.ElementAt(index);
+		return _undoStack.ElementAt(index);
 
     }
     public static void ExecuteCommand(ICommand command)
@@ -66,4 +66,8 @@ public class CommandInvoker
 			Debug.Log(_undoStack.Count);
 		}
 	}
+	public static Stack<ICommand> GetUndoStack()
+    {
+		return _undoStack;
+    }
 }

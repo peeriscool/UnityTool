@@ -6,15 +6,15 @@ using UnityEngine.SceneManagement;
 
 public class StartMenuHandler
 {
-    private static StartMenuHandler Instance; //singleton
     public UIDocument Menu;
-    //Commands
+    VisualElement MenuElement = new VisualElement();
     ICommands.OpenProjctFile ButtonOpen = new ICommands.OpenProjctFile();
     ICommands.NewFile ButtonNew;
+   
     public StartMenuHandler(UIDocument Ui)
     {
         Menu = Ui;
-        Instance = this;
+       // MenuElement = Ui.rootVisualElement;
         Debug.Log("Current Scene:" + SceneManager.GetActiveScene().name);
     }
     public void initialize()
@@ -24,18 +24,14 @@ public class StartMenuHandler
         VisualTreeAsset visualTree = Resources.Load<VisualTreeAsset>("StarMenuUi");
         var uiContainer = new VisualElement();
         visualTree.CloneTree(uiContainer);
-        Menu.rootVisualElement.Add(uiContainer);
-    }
-    public void AssignButtonValues()
-    {
-        Menu.rootVisualElement.visible = true;
-        Menu.rootVisualElement.SetEnabled(true);
-        Button Newbut = Menu.rootVisualElement.Q<Button>("New");
-        Button Loadbut = Menu.rootVisualElement.Q<Button>("Load");
-        Button Exitbut = Menu.rootVisualElement.Q<Button>("Exit");
-        Button Controls = Menu.rootVisualElement.Q<Button>("Control");
+        MenuElement.Add(uiContainer);
 
-        Menu.rootVisualElement.Q<VisualElement>("ControlsMenu").visible = false;
+        Button Newbut = MenuElement.Q<Button>("New");
+        Button Loadbut = MenuElement.Q<Button>("Load");
+        Button Exitbut = MenuElement.Q<Button>("Exit");
+        Button Controls = MenuElement.Q<Button>("Control");
+
+        MenuElement.Q<VisualElement>("ControlsMenu").visible = false;
         ButtonNew = new ICommands.NewFile(SceneManager.GetActiveScene(), "Empty");
         //assign functions to funvtions
         Newbut.clicked += () => ButtonNew.Execute();
@@ -44,6 +40,15 @@ public class StartMenuHandler
         Loadbut.clicked += () => Program.instance.Uimanager.CallPalleteHandler();
         Exitbut.clicked += () => quit();
         Controls.clicked += () => controltoggle();
+
+
+    }
+    public void LoadUi()
+    {
+        UiManager.ui.rootVisualElement.Add(MenuElement);
+        MenuElement.visible = true;
+        MenuElement.SetEnabled(true);
+       
     }
     private void quit()
     {
@@ -56,6 +61,6 @@ public class StartMenuHandler
     }
     void controltoggle()
     {
-        Menu.rootVisualElement.Q<VisualElement>("ControlsMenu").visible = !Menu.rootVisualElement.Q<VisualElement>("ControlsMenu").visible;
+        MenuElement.Q<VisualElement>("ControlsMenu").visible = !MenuElement.Q<VisualElement>("ControlsMenu").visible;
     }
 }

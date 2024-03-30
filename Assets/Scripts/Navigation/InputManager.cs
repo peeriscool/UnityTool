@@ -17,12 +17,30 @@ class InputManager
         Playeractions.InputMapping.Letters.Enable();
         Playeractions.InputMapping.Menucontrolls.Enable();
         Playeractions.InputMapping.Mouse.Enable();
+        Playeractions.InputMapping.Shortcuts.Enable();
+        Playeractions.InputMapping.Shortcuts.performed += Shortcutsperformed;
         Playeractions.InputMapping.Mouse.performed += Mouse_context;
         Playeractions.InputMapping.Mouse.canceled += Mouse_context;
         Playeractions.InputMapping.Letters.performed += Letters_performed;
         Playeractions.InputMapping.Menucontrolls.started += Menucontrolls_started;
         Playeractions.InputMapping.Menucontrolls.canceled += Menucontrolls_canceled;
         Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
+    }
+
+    private void Shortcutsperformed(InputAction.CallbackContext context)
+    {
+        if (context.action.activeControl == Keyboard.current.f1Key) //TODO multiselect
+        {
+            Program.instance.Uimanager.StartMenuHandler();
+        }
+        if (context.action.activeControl == Keyboard.current.f2Key) //TODO multiselect
+        {
+            Program.instance.Uimanager.CallPalleteHandler();
+        }
+        if (context.action.activeControl == Keyboard.current.f3Key ) //TODO multiselect
+        {
+            Program.instance.Uimanager.Calluisettings();
+        }
     }
 
     //change State of the mouse to Pickup,hold or Release
@@ -64,6 +82,8 @@ class InputManager
                     Program.instance.Uimanager.CallPalleteHandler();
                     break;
                 case "Pallete": Program.instance.Uimanager.StartMenuHandler();
+                    break;
+                case "uiSettings":  
                     break;
                 default: ;
                     if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name !=Program.instance.gameObject.scene.name) //check if we have a project scene to go back to, if not don't toggle UiMenu

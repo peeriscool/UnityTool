@@ -60,6 +60,11 @@ class InputManager
             {
                 SelectionManager.instance.selection = SelectionManager.state.Right;
             }
+            if(context.action.activeControl == Mouse.current.middleButton)
+            {
+                active = Modifier.Ctrl;
+                ToggleCamera();
+            }
         }
 
         if (context.canceled) //released
@@ -105,8 +110,7 @@ class InputManager
     {
         if (context.action.activeControl == Keyboard.current.leftCtrlKey)
         {
-            active = Modifier.Ctrl;
-            ToggleCamera();
+           
 
         }
         else if (context.action.activeControl == Keyboard.current.leftAltKey)

@@ -13,7 +13,7 @@ using UnityEngine;
 
 public class SelectionManager 
 {
-    bool Selected = false;
+    public bool Selected = false;
     public bool place = false;
     public static SelectionManager instance;
     public static GameObject Current; //object that need commands
@@ -47,7 +47,7 @@ public class SelectionManager
                     {
                         place = true;
                         //save position
-                        if (Current) JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+                        if (Current) JsonFileToProject.ProjectFile.SetDataFromRefrence(Current, Current.transform.position);  ///save obj data to json
                     }
                 }
                 break;
@@ -85,7 +85,7 @@ public class SelectionManager
                     //deselect object
                     if(Current)
                     {
-                        JsonFileToProject.ProjectFile.SetDataFromRefrence(Current.name, Current.transform.position);  ///save obj data to json
+                        JsonFileToProject.ProjectFile.SetDataFromRefrence(Current, Current.transform.position);  ///save obj data to json
                         Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);
                     }
                     Current = null;

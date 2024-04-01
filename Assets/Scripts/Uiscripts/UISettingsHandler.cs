@@ -16,18 +16,18 @@ public class UISettingsHandler
     public void initialize()
     {
         myelement = new VisualElement();
-        myelement.style.width = 400;
+        myelement.name = "myelement";
+        myelement.style.width = 600;
         myelement.style.height = 400;
         myelement.style.backgroundColor = Color.clear;
         Debug.Log(Resources.Load<Sprite>("Ui/ControlsMenu.jpg"));
         myelement.style.backgroundImage = Resources.Load<Texture2D>("Ui/ControlsMenu.jpg");
         myelement.style.backgroundSize = new StyleBackgroundSize(StyleKeyword.Initial);
         uiSettings.panelSettings = Resources.Load<PanelSettings>("PanelSettings");
-  
     }
     public void LoadUi()
     {
-        UiManager.ui.rootVisualElement.Clear();
+      //  if (UiManager.ui.rootVisualElement.Q<VisualElement>("myelement") != null) myelement.Remove(myelement);
         UiManager.ui.rootVisualElement.Add(myelement);
         UpdateHistroy();
     }
@@ -40,10 +40,14 @@ public class UISettingsHandler
             ICommand com = CommandInvoker.GetFromStack(i);
             options.Add(com.ToString()+ i.ToString());
         }
-         Historystack = new DropdownField("History", options, 0);
+        if(Historystack == null)
+        {
+            Historystack = new DropdownField("History", options, 0);
+        }
         Historystack.RegisterValueChangedCallback(handlehistory);
-        myelement.Add(Historystack);
-        Debug.Log("History: " + history.Count);
+         myelement.Add(Historystack);
+        
+         Debug.Log("History: " + history.Count);
     }
     private void handlehistory(ChangeEvent<string> evt)
     {

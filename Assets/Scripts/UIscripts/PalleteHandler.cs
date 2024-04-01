@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -27,7 +27,6 @@ public class PalleteHandler
     }
     public void LoadUi()
     {
-        UiManager.ui.rootVisualElement.Clear();
         UiManager.ui.rootVisualElement.Add(PalleteElement);
     }
     void GenerateButtons() //loads 
@@ -51,8 +50,13 @@ public class PalleteHandler
             string name = mytype.ToString(); //should change naming
             ICommands.CreatePrefab mycom = new ICommands.CreatePrefab("Prefabs/"+name);
             //CommandInvoker.ExecuteCommand(mycom)
-            PalleteElement.Q<Button>(butname).clicked += () => CommandInvoker.ExecuteCommand(mycom); //mycom.Execute(); //assigns button to a new ICommand
+            PalleteElement.Q<Button>(butname).clicked += () => CreatePrefab(mycom); //mycom.Execute(); //assigns button to a new ICommand
         }
+    }
+    void CreatePrefab(ICommands.CreatePrefab com)
+    {
+	    CommandInvoker.ExecuteCommand(com);
+        JsonFileToProject.AddObject(new GameObjectInScene(com.Myobject));
     }
     void GenerateTranslationMenu()
     {
@@ -136,7 +140,7 @@ public class PalleteHandler
             Transform activetransform = SelectionManager.Current.transform;
             Vector3 AplliedScale = PalleteElement.Q<Vector3Field>("Scale").value;
             activetransform.localScale = AplliedScale; //what is value??
-            JsonFileToProject.ProjectFile.SetDataFromRefrence(activetransform.name, AplliedScale);
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current, AplliedScale);
         }
     }
     public void SetUIParameters() //Make to Command
@@ -155,8 +159,8 @@ public class PalleteHandler
                 );
             SelectionManager.Current.transform.rotation = rot;
 
-            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current.name, position);  ///save obj data to json
-            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current.name, rot);
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current, position);  ///save obj data to json
+            JsonFileToProject.ProjectFile.SetDataFromRefrence(SelectionManager.Current, rot);
         }
     }
     public void UpdateUIParameters(Transform activetransform)  //Sets UI Transform and rotation

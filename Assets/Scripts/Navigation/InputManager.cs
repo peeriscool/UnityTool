@@ -10,7 +10,7 @@ class InputManager
     public enum Modifier { none, Ctrl, alt, shift }
     public Modifier active;
     float Scrollingvalue;
-    ICommands.CreatePrefab duplicate;
+    ICommands.CreatePrefab duplicate = new ICommands.CreatePrefab((GameObject) null);
     public void EnableControls()
     {
         active = Modifier.none;
@@ -134,8 +134,7 @@ class InputManager
     {
         if (context.action.activeControl == Keyboard.current.leftCtrlKey)
         {
-           
-
+            active = Modifier.Ctrl;
         }
         else if (context.action.activeControl == Keyboard.current.leftAltKey)
         {
@@ -156,14 +155,12 @@ class InputManager
         //If ctrl Copy 
         if (context.action.activeControl == Keyboard.current.cKey && active == Modifier.Ctrl) 
         {
-            if(SelectionManager.Current)
+            Debug.Log("ctrl C");
+
+            if (SelectionManager.Current)
             {
-                duplicate = new ICommands.CreatePrefab(SelectionManager.Current);
-                CommandInvoker.ExecuteCommand(duplicate);
-                //We have to fix bug of still having selected material
-                SelectionManager.Current = duplicate.GetMyobject();
+                duplicate.Myobject = SelectionManager.Current;
             }
-            Debug.Log(context.action.activeControl.name);
         }
         //If ctrl select all
         if (context.action.activeControl == Keyboard.current.aKey && active == Modifier.Ctrl)
@@ -193,14 +190,24 @@ class InputManager
         //If ctrl Paste
         if (context.action.activeControl == Keyboard.current.vKey && active == Modifier.Ctrl)
         {
-            Debug.Log(context.action.activeControl.name); //to do spawn at mouse position
-            if(duplicate.GetMyobject() != null)
+            Debug.Log("ctrl V");
+            if (duplicate.Myobject && SelectionManager.Current)
             {
+                duplicate.Myobject.transform.position = SelectionManager.Current.transform.position;
+                new GameObjectInScene(duplicate.Myobject.transform, 1); //make root
                 CommandInvoker.ExecuteCommand(duplicate);
-                //We have to fix bug of still having selected material
-                SelectionManager.Current = duplicate.GetMyobject();
-            }
-           
+                for (int i = 0; i < duplicate.Myobject.transform.childCount; i++)
+                {
+                    JsonFileToProject.AddObject(new GameObjectInScene(duplicate.Myobject.transform.GetChild(i),2)); //make childs
+                }
+              
+            }       
+            //to do get Material from lastselected object
+            //if(duplicate.Myobject.TryGetComponent<MeshRenderer>(out MeshRenderer render))
+            //  {
+            //      render.material = Selectionmanger.Lastselected.getcomp meshrender.material 
+            //  }
+
         }
 
     }

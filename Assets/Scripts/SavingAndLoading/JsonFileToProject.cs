@@ -53,6 +53,7 @@ public class GameObjectInScene
     {
     enum Owner { none,Root,Child,Subchild}
     public int ownerID;
+   //public int InstanceId;
     private GameObject reference;
     public MeshSaveData Mymesh; //root
     /// public MeshSaveData[] Mymeshes; //additional meshes 
@@ -74,6 +75,7 @@ public class GameObjectInScene
         Rotation = childobject.rotation;
         Mymesh = new MeshSaveData(childobject.GetComponent<MeshFilter>().mesh); //adds empty meshfilter
         ownerID = ownervalue;
+     //   InstanceId = obj.GetInstanceID();
     }
     /// <summary>
     /// adds an empty meshs
@@ -87,7 +89,7 @@ public class GameObjectInScene
         Position = position;
         Rotation = rotation;
         Mymesh = new MeshSaveData(obj.AddComponent<MeshFilter>().mesh); //adds empty meshfilter
-
+    //    InstanceId = obj.GetInstanceID();
     }
     /// <summary>
     /// Try's to get mesh from filter
@@ -99,7 +101,7 @@ public class GameObjectInScene
         Scale = obj.transform.localScale;
         Position = obj.transform.position;
         Rotation = obj.transform.rotation;
-           
+    //    InstanceId = obj.GetInstanceID();
         if (obj.TryGetComponent<MeshFilter>( out MeshFilter filter))
         {
             Mymesh = new MeshSaveData(filter.mesh);

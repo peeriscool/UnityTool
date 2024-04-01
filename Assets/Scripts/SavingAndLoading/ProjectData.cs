@@ -41,43 +41,63 @@ public class ProjectData
         }
         return null;
     }
-    public void SetDataFromRefrence(string objname, Vector3 position )
+    public void SetDataFromRefrence(GameObject obj, Vector3 position )
     {
+        bool sucses = false;
         for (int i = 0; i < SceneObjects.Count; i++)
         {
-            if (SceneObjects[i].Name == objname)
+            if (SceneObjects[i].Getrefrence() == obj)
             {
                 SceneObjects[i].Position = position;
-               // Debug.Log(SceneObjects[i].Position + " data/object" +position);
-
+                sucses = true;
                 //object found set data to refrence
             }
+            //for (int c = 0; c < SceneObjects[i].Getrefrence().transform.childCount; c++)
+            //{
+            //    if (SceneObjects[i].Getrefrence().transform.GetChild(c).gameObject.GetInstanceID() == obj.GetInstanceID())
+            //    {
+            //        SceneObjects[i].Getrefrence().transform.GetChild(c).gameObject.transform.position = position;
+            //        sucses = true;
+            //        //object found in child set data to refrence
+            //    }
+            //}
+           
         }
+        Debug.Log("Postion "+sucses);
     }
-    public void SetDataFromRefrence(string objname, Quaternion rotation)
+    public void SetDataFromRefrence(GameObject obj, Quaternion rotation)
     {
+        bool sucses = false;
+
         for (int i = 0; i < SceneObjects.Count; i++)
         {
-            if (SceneObjects[i].Name == objname)
+            if (SceneObjects[i].Getrefrence() == obj)
             {
                 SceneObjects[i].Rotation = rotation;
-             //   Debug.Log(SceneObjects[i].Position + " data/object" + rotation);
+                sucses = true;
+                //Debug.Log(SceneObjects[i].Position + " data/object" + rotation);
 
                 //object found set data to refrence
             }
         }
+        Debug.Log("rotation " + sucses);
+
     }
     public void SetDataFromRefrence(string objname, int scale)
     {
+        bool sucses = false;
+
         for (int i = 0; i < SceneObjects.Count; i++)
         {
             if (SceneObjects[i].Name == objname)
             {
                 SceneObjects[i].Scale = new Vector3(scale,scale,scale);
                 Debug.Log(SceneObjects[i].Position + " data/object" + scale);
-
+                sucses = true;
                 //object found set data to refrence
             }
         }
+        Debug.Log("Scale " + sucses);
+
     }
 }

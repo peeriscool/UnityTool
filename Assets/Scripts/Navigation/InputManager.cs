@@ -9,7 +9,8 @@ class InputManager
     Actions Playeractions;
     public enum Modifier { none, Ctrl, alt, shift }
     public Modifier active;
-
+    float Scrollingvalue;
+    ICommands.CreatePrefab duplicate;
     public void EnableControls()
     {
         active = Modifier.none;
@@ -18,6 +19,9 @@ class InputManager
         Playeractions.InputMapping.Menucontrolls.Enable();
         Playeractions.InputMapping.Mouse.Enable();
         Playeractions.InputMapping.Shortcuts.Enable();
+        Playeractions.InputMapping.Scroll.Enable();
+        Playeractions.InputMapping.Scroll.performed += _x => Scrollingvalue = _x.action.ReadValue<float>();
+        Playeractions.InputMapping.Scroll.performed += Scroll_performed;
         Playeractions.InputMapping.Shortcuts.performed += Shortcutsperformed;
         Playeractions.InputMapping.Mouse.performed += Mouse_context;
         Playeractions.InputMapping.Mouse.canceled += Mouse_context;
@@ -25,6 +29,25 @@ class InputManager
         Playeractions.InputMapping.Menucontrolls.started += Menucontrolls_started;
         Playeractions.InputMapping.Menucontrolls.canceled += Menucontrolls_canceled;
         Playeractions.InputMapping.Menucontrolls.performed += Menucontrolls_performed;
+    }
+
+    private void Scroll_performed(InputAction.CallbackContext obj)
+    {
+        Debug.Log(Scrollingvalue); 
+        if(SelectionManager.Current && SelectionManager.instance.place)
+        {
+            if(Scrollingvalue > 0)
+            {
+                ICommands.MoveCommand Upcom = new ICommands.MoveCommand(Vector3.up, SelectionManager.Current.transform);
+                CommandInvoker.ExecuteCommand(Upcom);
+            }
+            if (Scrollingvalue < 0)
+            {
+                ICommands.MoveCommand Downcom = new ICommands.MoveCommand(Vector3.down, SelectionManager.Current.transform);
+                CommandInvoker.ExecuteCommand(Downcom);
+            }
+        }
+
     }
 
     private void Shortcutsperformed(InputAction.CallbackContext context)
@@ -65,6 +88,7 @@ class InputManager
                 active = Modifier.Ctrl;
                 ToggleCamera();
             }
+           
         }
 
         if (context.canceled) //released
@@ -129,6 +153,18 @@ class InputManager
 
     private void Letters_performed(InputAction.CallbackContext context)
     {
+        //If ctrl Copy 
+        if (context.action.activeControl == Keyboard.current.cKey && active == Modifier.Ctrl) 
+        {
+            if(SelectionManager.Current)
+            {
+                duplicate = new ICommands.CreatePrefab(SelectionManager.Current);
+                CommandInvoker.ExecuteCommand(duplicate);
+                //We have to fix bug of still having selected material
+                SelectionManager.Current = duplicate.GetMyobject();
+            }
+            Debug.Log(context.action.activeControl.name);
+        }
         //If ctrl select all
         if (context.action.activeControl == Keyboard.current.aKey && active == Modifier.Ctrl)
         {
@@ -147,19 +183,23 @@ class InputManager
         //If ctrl Undo
         if (context.action.activeControl == Keyboard.current.zKey && active == Modifier.Ctrl)
         {
-          //  Debug.Log("ctrl " + context.action.activeControl.name);
             CommandInvoker.UndoComand();
         }
         //If ctrl Redo
         if (context.action.activeControl == Keyboard.current.yKey && active == Modifier.Ctrl)
-        {
-         //   Debug.Log("ctrl " + context.action.activeControl.name);
+        {       
             CommandInvoker.RedoCommand();
         }
         //If ctrl Paste
         if (context.action.activeControl == Keyboard.current.vKey && active == Modifier.Ctrl)
         {
-            Debug.Log(context.action.activeControl.name);
+            Debug.Log(context.action.activeControl.name); //to do spawn at mouse position
+            if(duplicate.GetMyobject() != null)
+            {
+                CommandInvoker.ExecuteCommand(duplicate);
+                //We have to fix bug of still having selected material
+                SelectionManager.Current = duplicate.GetMyobject();
+            }
            
         }
 

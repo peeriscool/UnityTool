@@ -14,7 +14,7 @@ using UnityEngine;
 public class SelectionManager 
 {
     bool Selected = false;
-    bool place = false;
+    public bool place = false;
     public static SelectionManager instance;
     public static GameObject Current; //object that need commands
     public Stack<GameObject> ObjSelection = new Stack<GameObject>();
@@ -72,8 +72,8 @@ public class SelectionManager
                             if (Current && !place)
                             {
                                Vector3 hitPoint = Zray.GetPoint(Vector3.Distance(Camera.main.transform.position, Current.transform.position)); //sets object to mouse raycast position
-                                hitPoint.y = 0;
-                                Current.transform.position = ExtensionMethods.Round(hitPoint,0) + m_offset;
+                               hitPoint.y = Current.transform.position.y;
+                               Current.transform.position = ExtensionMethods.Round(hitPoint,0) + m_offset;
                             }
 
                         Program.instance.Uimanager.palleteHandler.UpdateUIParameters(Current.transform);

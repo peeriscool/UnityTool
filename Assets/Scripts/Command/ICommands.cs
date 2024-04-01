@@ -133,7 +133,10 @@ public class ICommands
         {
             Myobject = GameObject.Instantiate(Myobject);
         }
-
+        public GameObject GetMyobject()
+        {
+            return Myobject;
+        }
         public void Undo()
         {
             //Myobject.active = false;

@@ -71,6 +71,15 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Scroll"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""db346e90-7df7-461c-802b-9a8f0651f422"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -230,6 +239,17 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""73374997-2747-4c1d-ae83-197c27aa0b76"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Letters"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""df9f85d6-fb82-4c05-95e6-487624d9f645"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
@@ -326,6 +346,17 @@ public partial class @Actions: IInputActionCollection2, IDisposable
                     ""action"": ""Shortcuts"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f83288ba-e3e1-4143-9a1d-354626892942"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Scroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -339,6 +370,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         m_InputMapping_Letters = m_InputMapping.FindAction("Letters", throwIfNotFound: true);
         m_InputMapping_Mouse = m_InputMapping.FindAction("Mouse", throwIfNotFound: true);
         m_InputMapping_Shortcuts = m_InputMapping.FindAction("Shortcuts", throwIfNotFound: true);
+        m_InputMapping_Scroll = m_InputMapping.FindAction("Scroll", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -405,6 +437,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
     private readonly InputAction m_InputMapping_Letters;
     private readonly InputAction m_InputMapping_Mouse;
     private readonly InputAction m_InputMapping_Shortcuts;
+    private readonly InputAction m_InputMapping_Scroll;
     public struct InputMappingActions
     {
         private @Actions m_Wrapper;
@@ -414,6 +447,7 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         public InputAction @Letters => m_Wrapper.m_InputMapping_Letters;
         public InputAction @Mouse => m_Wrapper.m_InputMapping_Mouse;
         public InputAction @Shortcuts => m_Wrapper.m_InputMapping_Shortcuts;
+        public InputAction @Scroll => m_Wrapper.m_InputMapping_Scroll;
         public InputActionMap Get() { return m_Wrapper.m_InputMapping; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -438,6 +472,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Shortcuts.started += instance.OnShortcuts;
             @Shortcuts.performed += instance.OnShortcuts;
             @Shortcuts.canceled += instance.OnShortcuts;
+            @Scroll.started += instance.OnScroll;
+            @Scroll.performed += instance.OnScroll;
+            @Scroll.canceled += instance.OnScroll;
         }
 
         private void UnregisterCallbacks(IInputMappingActions instance)
@@ -457,6 +494,9 @@ public partial class @Actions: IInputActionCollection2, IDisposable
             @Shortcuts.started -= instance.OnShortcuts;
             @Shortcuts.performed -= instance.OnShortcuts;
             @Shortcuts.canceled -= instance.OnShortcuts;
+            @Scroll.started -= instance.OnScroll;
+            @Scroll.performed -= instance.OnScroll;
+            @Scroll.canceled -= instance.OnScroll;
         }
 
         public void RemoveCallbacks(IInputMappingActions instance)
@@ -481,5 +521,6 @@ public partial class @Actions: IInputActionCollection2, IDisposable
         void OnLetters(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
         void OnShortcuts(InputAction.CallbackContext context);
+        void OnScroll(InputAction.CallbackContext context);
     }
 }

@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Scroll",
+                    "type": "PassThrough",
+                    "id": "db346e90-7df7-461c-802b-9a8f0651f422",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -208,6 +217,17 @@
                 },
                 {
                     "name": "",
+                    "id": "73374997-2747-4c1d-ae83-197c27aa0b76",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Letters",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "df9f85d6-fb82-4c05-95e6-487624d9f645",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
@@ -302,6 +322,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shortcuts",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f83288ba-e3e1-4143-9a1d-354626892942",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Scroll",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
